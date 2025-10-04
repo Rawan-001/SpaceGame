@@ -1,0 +1,710 @@
+/* Space Game Styles - Fully Responsive for iPad */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  touch-action: manipulation;
+  overflow: hidden;
+}
+
+body {
+  background: radial-gradient(circle at 20% 20%, #4a5482, #1b203a 60%);
+  background-attachment: fixed;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#gameCanvas {
+  display: block;
+  image-rendering: pixelated;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  background: rgba(0,0,0,0.15);
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+/* iPad Pro 12.9" (1024x1366) */
+@media screen and (min-width: 1024px) and (max-width: 1366px) {
+  .game-container {
+    padding: 20px;
+    gap: 15px;
+  }
+  
+  #gameCanvas {
+    max-width: 90vw;
+    max-height: 80vh;
+    border-radius: 12px;
+  }
+  
+  .instructions-panel {
+    max-width: 350px;
+    font-size: 16px;
+  }
+  
+  .music-button {
+    font-size: 16px;
+    padding: 12px 18px;
+  }
+}
+
+/* iPad Pro 11" (834x1194) */
+@media screen and (min-width: 834px) and (max-width: 1194px) {
+  .game-container {
+    padding: 15px;
+    gap: 12px;
+  }
+  
+  #gameCanvas {
+    max-width: 85vw;
+    max-height: 75vh;
+    border-radius: 10px;
+  }
+  
+  .instructions-panel {
+    max-width: 320px;
+    font-size: 15px;
+  }
+  
+  .music-button {
+    font-size: 15px;
+    padding: 11px 16px;
+  }
+}
+
+/* iPad (768x1024) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .game-container {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  #gameCanvas {
+    max-width: 80vw;
+    max-height: 70vh;
+    border-radius: 8px;
+  }
+  
+  .instructions-panel {
+    max-width: 300px;
+    font-size: 14px;
+  }
+  
+  .music-button {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+}
+
+/* iPad Mini (768x1024) */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (max-height: 1024px) {
+  .game-container {
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  #gameCanvas {
+    max-width: 75vw;
+    max-height: 65vh;
+    border-radius: 6px;
+  }
+  
+  .instructions-panel {
+    max-width: 280px;
+    font-size: 13px;
+  }
+  
+  .music-button {
+    font-size: 13px;
+    padding: 9px 14px;
+  }
+}
+
+/* iPad Landscape Mode */
+@media screen and (min-width: 1024px) and (orientation: landscape) {
+  .game-container {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 15px;
+  }
+  
+  #gameCanvas {
+    max-width: 70vw;
+    max-height: 85vh;
+    order: 1;
+  }
+  
+  .instructions-panel {
+    order: 2;
+    max-width: 300px;
+    max-height: 80vh;
+    margin-left: 20px;
+  }
+  
+  .joystick-container {
+    bottom: 110px; /* Above student info */
+    left: 30px;
+  }
+  
+  .action-buttons-container {
+    bottom: 30px;
+    right: 30px;
+  }
+  
+  .student-info {
+    bottom: 30px;
+    left: 30px;
+  }
+}
+
+/* iPad Portrait Mode */
+@media screen and (max-width: 1024px) and (orientation: portrait) {
+  .game-container {
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+  }
+  
+  #gameCanvas {
+    max-width: 90vw;
+    max-height: 60vh;
+    order: 1;
+  }
+  
+  .instructions-panel {
+    order: 2;
+    max-width: 90vw;
+    max-height: 25vh;
+    margin-top: 10px;
+  }
+  
+  .joystick-container {
+    bottom: 100px; /* Above student info */
+    left: 20px;
+  }
+  
+  .action-buttons-container {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .student-info {
+    bottom: 20px;
+    left: 20px;
+  }
+}
+
+/* Hide instructions on very small screens */
+@media screen and (max-width: 768px) {
+  .instructions-panel {
+    display: none;
+  }
+  
+  #gameCanvas {
+    max-height: 80vh;
+  }
+}
+
+.music-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(100, 150, 255, 0.8);
+  color: white;
+  border: 2px solid rgba(150, 200, 255, 0.6);
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.music-button:hover {
+  background: rgba(120, 170, 255, 0.9);
+  border-color: rgba(170, 220, 255, 0.8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.music-button:active {
+  transform: translateY(0);
+  background: rgba(80, 130, 255, 0.9);
+}
+
+.instructions-panel {
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  max-width: 300px;
+  max-height: 600px;
+  overflow-y: auto;
+  border: 2px solid rgba(100, 150, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.instructions-panel h3 {
+  margin: 0 0 15px 0;
+  color: #4ecdc4;
+  text-align: center;
+  font-size: 18px;
+}
+
+.instructions-panel h4 {
+  margin: 15px 0 8px 0;
+  color: #feca57;
+  font-size: 14px;
+}
+
+.instructions-panel ul {
+  margin: 0 0 10px 0;
+  padding-right: 15px;
+}
+
+.instructions-panel li {
+  margin: 5px 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.instructions-panel strong {
+  color: #96ceb4;
+}
+
+/* Touch Controls - Enhanced for iPad */
+/* Joystick Container (Left side, above student info) */
+.joystick-container {
+  position: fixed;
+  bottom: 100px; /* Above student info (20px + 80px for student info height) */
+  left: 20px;
+  z-index: 1000;
+  pointer-events: auto;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.joystick-container:hover {
+  opacity: 1;
+}
+
+/* Action Buttons Container (Right side) */
+.action-buttons-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  pointer-events: auto;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.action-buttons-container:hover {
+  opacity: 1;
+}
+
+/* Virtual Joystick - Enhanced for iPad */
+.virtual-joystick {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.joystick-base {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(100, 150, 255, 0.3);
+  border: 3px solid rgba(150, 200, 255, 0.6);
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.joystick-knob {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 3px solid rgba(100, 150, 255, 0.8);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.1s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.joystick-knob.active {
+  background: rgba(255, 200, 100, 0.9);
+  border-color: rgba(255, 220, 150, 0.8);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Action Buttons for iPad */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.action-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(100, 150, 255, 0.8);
+  border: 3px solid rgba(150, 200, 255, 0.6);
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.action-button:hover {
+  background: rgba(120, 170, 255, 0.9);
+  transform: scale(1.05);
+}
+
+.action-button:active {
+  transform: scale(0.95);
+  background: rgba(80, 130, 255, 0.9);
+}
+
+/* Restart Button Special Styling */
+.restart-button {
+  background: rgba(255, 100, 100, 0.8) !important;
+  border-color: rgba(255, 150, 150, 0.6) !important;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.restart-button:hover {
+  background: rgba(255, 120, 120, 0.9) !important;
+}
+
+.restart-button:active {
+  background: rgba(255, 80, 80, 0.9) !important;
+  transform: scale(0.95) !important;
+}
+
+.restart-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 150, 150, 0.5) !important;
+}
+
+/* Hide touch controls on desktop */
+@media screen and (min-width: 1025px) {
+  .joystick-container,
+  .action-buttons-container {
+    display: none;
+  }
+}
+
+/* Show touch controls on mobile/tablet */
+@media screen and (max-width: 1024px) {
+  .joystick-container,
+  .action-buttons-container {
+    display: block;
+  }
+}
+
+/* iPad specific adjustments */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .virtual-joystick {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .joystick-base {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .joystick-knob {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .action-button {
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+  }
+}
+
+/* Extra small screens */
+@media screen and (max-width: 480px) {
+  .game-container {
+    padding: 5px;
+    gap: 5px;
+  }
+  
+  #gameCanvas {
+    max-width: 95vw;
+    max-height: 85vh;
+    border-radius: 6px;
+  }
+  
+  .joystick-container {
+    bottom: 90px; /* Above student info */
+    left: 15px;
+  }
+  
+  .action-buttons-container {
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .virtual-joystick {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .joystick-base {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .joystick-knob {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .action-button {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+}
+
+/* Very small browser windows */
+@media screen and (max-width: 600px) and (max-height: 400px) {
+  .game-container {
+    padding: 2px;
+    gap: 2px;
+  }
+  
+  #gameCanvas {
+    max-width: 98vw;
+    max-height: 90vh;
+    border-radius: 4px;
+  }
+  
+  .instructions-panel {
+    display: none;
+  }
+  
+  .student-info {
+    font-size: 10px;
+    padding: 5px 8px;
+    bottom: 5px;
+    left: 5px;
+  }
+  
+  .music-button {
+    font-size: 12px;
+    padding: 6px 10px;
+    top: 10px;
+    right: 10px;
+  }
+}
+
+/* Medium browser windows */
+@media screen and (min-width: 600px) and (max-width: 1024px) {
+  .game-container {
+    padding: 8px;
+    gap: 8px;
+  }
+  
+  #gameCanvas {
+    max-width: 90vw;
+    max-height: 80vh;
+  }
+}
+
+/* Large browser windows */
+@media screen and (min-width: 1024px) {
+  .game-container {
+    padding: 15px;
+    gap: 15px;
+  }
+  
+  #gameCanvas {
+    max-width: 85vw;
+    max-height: 75vh;
+  }
+}
+
+/* Student Information */
+.student-info {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(100, 150, 255, 0.3);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.student-info p {
+  margin: 0;
+  padding: 2px 0;
+}
+
+/* Hide student info on very small screens to avoid overlap */
+@media screen and (max-width: 480px) {
+  .student-info {
+    font-size: 12px;
+    padding: 8px 12px;
+    bottom: 15px;
+    left: 15px;
+  }
+}
+
+/* iPad specific optimizations */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .student-info {
+    font-size: 13px;
+    padding: 12px 16px;
+  }
+}
+
+/* Performance optimizations for iPad */
+@media screen and (min-width: 768px) {
+  * {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  #gameCanvas {
+    will-change: transform;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+/* iPad-specific optimizations */
+@supports (-webkit-touch-callout: none) {
+  .game-container {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  #gameCanvas {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  .touch-controls {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  .virtual-joystick {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  .action-button {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* Landscape orientation specific adjustments */
+@media screen and (orientation: landscape) and (max-height: 600px) {
+  .game-container {
+    padding: 5px;
+    gap: 5px;
+  }
+  
+  #gameCanvas {
+    max-height: 90vh;
+  }
+  
+  .instructions-panel {
+    display: none;
+  }
+  
+  .joystick-container {
+    bottom: 80px; /* Above student info */
+    left: 10px;
+  }
+  
+  .action-buttons-container {
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .student-info {
+    bottom: 10px;
+    left: 10px;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}

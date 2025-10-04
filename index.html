@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover, maximum-scale=1.0, minimum-scale=1.0">
+    <title>رحلة رائد الفضاء</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas" aria-label="فضاء اللعبة"></canvas>
+        
+        <!-- Music Control Button -->
+        <button id="musicToggle" class="music-button" onclick="toggleMusic()">🎵 تشغيل الموسيقى</button>
+        
+        <div class="instructions-panel">
+            <h3>تعليمات اللعب</h3>
+            <div class="instructions-content">
+                <h4>التحكم بالابتوب :</h4>
+                <ul>
+                    <li>الأسهم: تحريك رائد الفضاء</li>
+                    <li>F1: التفاعل مع الكمبيوتر</li>
+                    <li>F3: اضغط مرتين للخروج من المركبة</li>
+                </ul>
+            
+                <h4>التحكم بالتابلت :</h4>
+                <ul>
+                    <li>عصا التحكم: تحريك رائد الفضاء</li>
+                    <li>🎮️: التفاعل مع الكمبيوتر</li>
+                    <li>🚪: اضغط مرتين للخروج من المركبة</li>
+                </ul>
+
+            </div>
+        </div>
+        
+        <!-- Touch Controls for Mobile/Tablet -->
+        <!-- Virtual Joystick for movement (Left side) -->
+        <div class="joystick-container">
+            <div class="virtual-joystick" id="virtualJoystick">
+                <div class="joystick-base"></div>
+                <div class="joystick-knob" id="joystickKnob"></div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons (Right side) -->
+        <div class="action-buttons-container">
+            <div class="action-buttons">
+                <button class="action-button" id="interactButton" title="لعب">🎮</button>
+                <button class="action-button" id="exitButton" title="خروج">🚪</button>
+                <button class="action-button restart-button" id="restartButton" title="إعادة اللعبة">🔄</button>
+            </div>
+        </div>
+        
+        <!-- Student Information -->
+        <div class="student-info">
+            <p>عمل الطالبة : رودينا علي الغامدي</p>
+            <p>المدرسة : 102 الإبتدائية</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <noscript>الرجاء تفعيل JavaScript لتجربة اللعبة.</noscript>
+    <!--
+        Astronaut's Journey - Level 1
+        Use Arrow Keys to move. Avoid obstacles and reach the ship!
+    -->
+    
+</body>
+</html>
+
+

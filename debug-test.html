@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover, maximum-scale=1.0, minimum-scale=1.0">
+    <title>اختبار تصحيح الأخطاء</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        .debug-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background: #0056b3; }
+        #console-output {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🔧 اختبار تصحيح الأخطاء</h1>
+        
+        <div id="status-container">
+            <div class="status info">جاري اختبار المتغيرات...</div>
+        </div>
+        
+        <div>
+            <button onclick="testVariables()">اختبار المتغيرات</button>
+            <button onclick="testCanvas()">اختبار Canvas</button>
+            <button onclick="testTouchControls()">اختبار التحكم باللمس</button>
+            <button onclick="clearConsole()">مسح Console</button>
+        </div>
+        
+        <h3>📋 Console Output:</h3>
+        <div id="console-output"></div>
+        
+        <div class="status info">
+            <strong>ملاحظات:</strong><br>
+            - افتح Developer Tools (F12) لرؤية رسائل مفصلة<br>
+            - استخدم <code>logCanvasState()</code> في Console<br>
+            - تأكد من عدم وجود أخطاء في Console
+        </div>
+    </div>
+
+    <script>
+        let consoleOutput = document.getElementById('console-output');
+        let statusContainer = document.getElementById('status-container');
+        
+        function log(message) {
+            console.log(message);
+            consoleOutput.textContent += message + '\n';
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+        
+        function setStatus(message, type = 'info') {
+            statusContainer.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function clearConsole() {
+            consoleOutput.textContent = '';
+            console.clear();
+        }
+        
+        function testVariables() {
+            log('=== اختبار المتغيرات ===');
+            
+            try {
+                // Test if variables are accessible
+                if (typeof window.logCanvasState === 'function') {
+                    log('✅ logCanvasState function is available');
+                } else {
+                    log('❌ logCanvasState function not found');
+                }
+                
+                // Test touch detection
+                const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+                log(`Touch device detected: ${isTouchDevice}`);
+                
+                // Test iPad detection
+                const isIPad = /iPad/.test(navigator.userAgent) || 
+                             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
+                             (navigator.userAgent.includes('iPad')) ||
+                             (navigator.userAgent.includes('iPhone') && window.screen.width >= 768);
+                log(`iPad detected: ${isIPad}`);
+                
+                setStatus('✅ اختبار المتغيرات مكتمل', 'success');
+                
+            } catch (error) {
+                log(`❌ Error testing variables: ${error.message}`);
+                setStatus('❌ خطأ في اختبار المتغيرات', 'error');
+            }
+        }
+        
+        function testCanvas() {
+            log('=== اختبار Canvas ===');
+            
+            try {
+                const canvas = document.getElementById('gameCanvas');
+                if (canvas) {
+                    log(`✅ Canvas found: ${canvas.width}x${canvas.height}`);
+                    log(`Canvas display size: ${canvas.style.width}x${canvas.style.height}`);
+                    
+                    if (window.logCanvasState) {
+                        window.logCanvasState();
+                    }
+                    
+                    setStatus('✅ اختبار Canvas مكتمل', 'success');
+                } else {
+                    log('❌ Canvas not found');
+                    setStatus('❌ Canvas غير موجود', 'error');
+                }
+            } catch (error) {
+                log(`❌ Error testing canvas: ${error.message}`);
+                setStatus('❌ خطأ في اختبار Canvas', 'error');
+            }
+        }
+        
+        function testTouchControls() {
+            log('=== اختبار التحكم باللمس ===');
+            
+            try {
+                const joystick = document.getElementById('virtualJoystick');
+                const interactBtn = document.getElementById('interactButton');
+                const exitBtn = document.getElementById('exitButton');
+                
+                if (joystick) {
+                    log('✅ Virtual joystick found');
+                } else {
+                    log('❌ Virtual joystick not found');
+                }
+                
+                if (interactBtn) {
+                    log('✅ Interact button found');
+                } else {
+                    log('❌ Interact button not found');
+                }
+                
+                if (exitBtn) {
+                    log('✅ Exit button found');
+                } else {
+                    log('❌ Exit button not found');
+                }
+                
+                setStatus('✅ اختبار التحكم باللمس مكتمل', 'success');
+                
+            } catch (error) {
+                log(`❌ Error testing touch controls: ${error.message}`);
+                setStatus('❌ خطأ في اختبار التحكم باللمس', 'error');
+            }
+        }
+        
+        // Auto-run tests when page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                testVariables();
+                setTimeout(() => {
+                    testCanvas();
+                    setTimeout(() => {
+                        testTouchControls();
+                    }, 500);
+                }, 500);
+            }, 1000);
+        });
+        
+        // Capture console errors
+        window.addEventListener('error', function(e) {
+            log(`❌ JavaScript Error: ${e.message} at ${e.filename}:${e.lineno}`);
+            setStatus('❌ خطأ JavaScript', 'error');
+        });
+    </script>
+    
+    <!-- Load the game in an iframe for testing -->
+    <iframe src="index.html" width="100%" height="400" style="margin-top: 20px; border: 1px solid #ddd; border-radius: 5px;"></iframe>
+</body>
+</html>
+
