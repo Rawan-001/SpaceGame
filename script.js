@@ -1116,6 +1116,26 @@
     canRetryAfterWin: false, // Allow retry after winning
     allQuestions: [
       {
+        question: "كيف يتحرك رواد الفضاء داخل محطة الفضاء؟",
+        options: ["يزحفون", "يطيرون في الهواء بسبب انعدام الجاذبية", "يمشون على الأرض", "يركبون سيارات صغيرة"],
+        answer: "يطيرون في الهواء بسبب انعدام الجاذبية"
+      },
+      {
+        question: "هل الصوت ينتقل في الفضاء؟",
+        options: ["نعم دائمًا", "لا، لا يوجد هواء", "أحيانًا", "في الليل فقط"],
+        answer: "لا، لا يوجد هواء"
+      },
+      {
+        question: "ما اسم أبعد كوكب في المجموعة الشمسية؟",
+        options: ["أورانوس", "نبتون", "زحل", "المشتري"],
+        answer: "نبتون"
+      },
+      {
+        question: "ما الغاز الذي نتنفسه على الأرض؟",
+        options: ["هيليوم", "أكسجين", "نيتروجين", "كربون"],
+        answer: "أكسجين"
+      },
+      {
         question: "ما اسم الكوكب الأحمر؟",
         options: ["الأرض", "المشتري", "المريخ", "الزهرة"],
         answer: "المريخ"
@@ -1233,8 +1253,8 @@
       },
       {
         question: "ما هي محطة الفضاء الدولية؟",
-        options: ["قمر صناعي", "بيت كبير لرواد الفضاء", "كوكب", "مركبة فضائية صغيرة"],
-        answer: "بيت كبير لرواد الفضاء"
+        options: ["قمر صناعي", "محطة صغيرة لرواد الفضاء", "كوكب", "مركبة فضائية صغيرة"],
+        answer: "محطة صغيرة لرواد الفضاء"
       },
       {
         question: "كيف يشرب رائد الفضاء الماء؟",
@@ -2364,7 +2384,7 @@
       playSound(audio.quizWrongSound);
     }
     
-    // Move to next question after a very short delay to show result
+    // Move to next question after a short delay to show result
     setTimeout(() => {
       quiz.currentQuestion += 1;
       quiz.selectedAnswer = null;
@@ -2373,7 +2393,7 @@
         // Quiz completed
         endQuiz();
       }
-    }, 200);
+    }, 800);
   }
   
   function endQuiz() {
@@ -5606,15 +5626,31 @@
       const buttonX = quizBoxX + (quizBoxWidth - buttonWidth) / 2;
       const buttonY = startY + index * (buttonHeight + buttonSpacing);
       
-      // Button background - highlight selected answer
+      // Button background - show colors for all answers when an answer is selected
       ctx.save();
-      if (quiz.selectedAnswer === option) {
+      if (quiz.selectedAnswer) {
+        // Show colors for all options when an answer is selected
         const isCorrect = option === quiz.questions[quiz.currentQuestion].answer;
-        ctx.fillStyle = isCorrect ? 'rgba(100, 200, 100, 0.9)' : 'rgba(200, 100, 100, 0.9)';
-        ctx.strokeStyle = isCorrect ? 'rgba(150, 255, 150, 1)' : 'rgba(255, 150, 150, 1)';
-        ctx.lineWidth = 3;
+        const isSelected = quiz.selectedAnswer === option;
+        
+        if (isCorrect) {
+          // Green for correct answer
+          ctx.fillStyle = 'rgba(100, 200, 100, 0.9)';
+          ctx.strokeStyle = 'rgba(150, 255, 150, 1)';
+          ctx.lineWidth = 3;
+        } else if (isSelected) {
+          // Red for selected wrong answer
+          ctx.fillStyle = 'rgba(200, 100, 100, 0.9)';
+          ctx.strokeStyle = 'rgba(255, 150, 150, 1)';
+          ctx.lineWidth = 3;
+        } else {
+          // Gray for unselected wrong answers
+          ctx.fillStyle = 'rgba(120, 120, 120, 0.7)';
+          ctx.strokeStyle = 'rgba(150, 150, 150, 0.8)';
+          ctx.lineWidth = 2;
+        }
       } else {
-        // Check for hover effect (simplified - always show hover for better visibility)
+        // Normal appearance when no answer selected
         ctx.fillStyle = 'rgba(80, 100, 140, 0.9)';
         ctx.strokeStyle = 'rgba(120, 170, 255, 1)';
         ctx.lineWidth = 2;
