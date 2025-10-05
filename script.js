@@ -13,8 +13,8 @@
   /** @type {CanvasRenderingContext2D} */
   const ctx = canvas.getContext('2d');
 
-  // Responsive canvas system
-  const GAME_WIDTH = 800;
+  // Responsive canvas system - Rectangular format for better gameplay
+  const GAME_WIDTH = 1000;
   const GAME_HEIGHT = 600;
   let scaleX = 1;
   let scaleY = 1;
@@ -48,6 +48,11 @@
                      (navigator.userAgent.includes('iPad')) ||
                      (navigator.userAgent.includes('iPhone') && window.screen.width >= 768);
 
+  // Detect low-end devices (Huawei tablets, etc.)
+  const isLowEndDevice = /Huawei|HONOR|MediaTek|Snapdragon 4|Snapdragon 6/i.test(navigator.userAgent) ||
+                         (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+                         (navigator.deviceMemory && navigator.deviceMemory <= 4);
+
   // Main Loop variables (moved up to avoid reference errors)
   let lastTime = 0;
   let targetFPS = 60;
@@ -63,6 +68,13 @@
       console.log('iPad simulation detected, using 60 FPS');
     }
     frameInterval = 1000 / targetFPS;
+  }
+  
+  // Additional performance settings for low-end devices
+  if (isLowEndDevice) {
+    targetFPS = 30; // Lower FPS for low-end devices
+    frameInterval = 1000 / targetFPS;
+    console.log('Low-end device detected, using 30 FPS for better performance');
   }
 
   // Initialize responsive canvas
@@ -254,10 +266,17 @@
     ship3EngineSound: null,
     ship3FlyingSound: null,
     
+    // Celebration sounds
+    celebrationMusic: null,
+    confettiSound: null,
+    victorySound: null,
+    fireworksSound: null,
+    
     // Audio context for Web Audio API
     audioContext: null,
     initialized: false,
-    winSoundPlayed: false
+    winSoundPlayed: false,
+    celebrationMusicPlayed: false
   };
 
   // Create audio element for music
@@ -267,6 +286,22 @@
   musicAudio.volume = 0.3; // 30% volume for background music
   musicAudio.muted = false;
   musicAudio.preload = 'auto';
+
+  // Create audio element for celebration music
+  const celebrationMusicAudio = document.createElement('audio');
+  celebrationMusicAudio.src = 'images/music1.mp3'; // Use existing music1.mp3 for celebration
+  celebrationMusicAudio.loop = true;
+  celebrationMusicAudio.volume = 0.4; // 40% volume for celebration music
+  celebrationMusicAudio.muted = false;
+  celebrationMusicAudio.preload = 'auto';
+
+  // Create audio element for Samud (survival) music
+  const samudMusicAudio = document.createElement('audio');
+  samudMusicAudio.src = 'images/Samud.m4a'; // Use Samud.m4a for survival stage
+  samudMusicAudio.loop = true;
+  samudMusicAudio.volume = 0.5; // 50% volume for survival music
+  samudMusicAudio.muted = false;
+  samudMusicAudio.preload = 'auto';
 
   // Initialize audio immediately
   initAudio();
@@ -363,6 +398,90 @@
 
   // Make toggleMusic globally available
   window.toggleMusic = toggleMusic;
+
+  // Function to start celebration music
+  function startCelebrationMusic() {
+    if (audio.initialized && celebrationMusicAudio && !audio.celebrationMusicPlayed) {
+      try {
+        // Stop background music first
+        if (musicAudio && !musicAudio.paused) {
+          musicAudio.pause();
+        }
+        
+        // Start celebration music
+        celebrationMusicAudio.currentTime = 0;
+        celebrationMusicAudio.play().then(() => {
+          console.log('Celebration music started successfully');
+          audio.celebrationMusicPlayed = true;
+        }).catch(e => {
+          console.warn('Celebration music playback failed:', e);
+        });
+      } catch (error) {
+        console.warn('Celebration music start failed:', error);
+      }
+    }
+  }
+
+  // Function to stop celebration music and return to background music
+  function stopCelebrationMusic() {
+    if (celebrationMusicAudio && !celebrationMusicAudio.paused) {
+      celebrationMusicAudio.pause();
+      console.log('Celebration music stopped');
+    }
+    
+    // Resume background music
+    if (musicAudio && musicAudio.paused) {
+      musicAudio.play().then(() => {
+        console.log('Background music resumed');
+      }).catch(e => {
+        console.warn('Background music resume failed:', e);
+      });
+    }
+  }
+
+  // Function to start Samud (survival) music
+  function startSamudMusic() {
+    if (audio.initialized && samudMusicAudio) {
+      try {
+        // Stop background music first
+        if (musicAudio && !musicAudio.paused) {
+          musicAudio.pause();
+        }
+        
+        // Stop celebration music if playing
+        if (celebrationMusicAudio && !celebrationMusicAudio.paused) {
+          celebrationMusicAudio.pause();
+        }
+        
+        // Start Samud music
+        samudMusicAudio.currentTime = 0;
+        samudMusicAudio.play().then(() => {
+          console.log('Samud music started successfully');
+        }).catch(e => {
+          console.warn('Samud music playback failed:', e);
+        });
+      } catch (error) {
+        console.warn('Samud music start failed:', error);
+      }
+    }
+  }
+
+  // Function to stop Samud music and return to background music
+  function stopSamudMusic() {
+    if (samudMusicAudio && !samudMusicAudio.paused) {
+      samudMusicAudio.pause();
+      console.log('Samud music stopped');
+    }
+    
+    // Resume background music
+    if (musicAudio && musicAudio.paused) {
+      musicAudio.play().then(() => {
+        console.log('Background music resumed');
+      }).catch(e => {
+        console.warn('Background music resume failed:', e);
+      });
+    }
+  }
 
 
   // Create sound effects using Web Audio API
@@ -532,6 +651,70 @@
       oscillator.start();
       oscillator.stop(audio.audioContext.currentTime + 0.5);
     };
+
+    // Celebration sounds
+    // Confetti sound (sparkly effect)
+    audio.confettiSound = () => {
+      const oscillator = audio.audioContext.createOscillator();
+      const gainNode = audio.audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audio.audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(800, audio.audioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(1200, audio.audioContext.currentTime + 0.1);
+      oscillator.frequency.exponentialRampToValueAtTime(600, audio.audioContext.currentTime + 0.2);
+      
+      gainNode.gain.setValueAtTime(0.05, audio.audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audio.audioContext.currentTime + 0.2);
+      
+      oscillator.start();
+      oscillator.stop(audio.audioContext.currentTime + 0.2);
+    };
+
+    // Victory sound (triumphant fanfare)
+    audio.victorySound = () => {
+      const oscillator = audio.audioContext.createOscillator();
+      const gainNode = audio.audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audio.audioContext.destination);
+      
+      // Victory fanfare melody
+      oscillator.frequency.setValueAtTime(523, audio.audioContext.currentTime); // C5
+      oscillator.frequency.setValueAtTime(659, audio.audioContext.currentTime + 0.2); // E5
+      oscillator.frequency.setValueAtTime(784, audio.audioContext.currentTime + 0.4); // G5
+      oscillator.frequency.setValueAtTime(1047, audio.audioContext.currentTime + 0.6); // C6
+      
+      gainNode.gain.setValueAtTime(0.1, audio.audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audio.audioContext.currentTime + 1.0);
+      
+      oscillator.start();
+      oscillator.stop(audio.audioContext.currentTime + 1.0);
+    };
+
+    // Fireworks sound (explosive effect)
+    audio.fireworksSound = () => {
+      const oscillator = audio.audioContext.createOscillator();
+      const gainNode = audio.audioContext.createGain();
+      const filter = audio.audioContext.createBiquadFilter();
+      
+      oscillator.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(audio.audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(100, audio.audioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(50, audio.audioContext.currentTime + 0.3);
+      
+      gainNode.gain.setValueAtTime(0.08, audio.audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audio.audioContext.currentTime + 0.3);
+      
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(2000, audio.audioContext.currentTime);
+      
+      oscillator.start();
+      oscillator.stop(audio.audioContext.currentTime + 0.3);
+    };
   }
 
   // Play sound effect
@@ -690,7 +873,7 @@
   const insideShip = {
     playerX: 0,
     playerY: 0,
-    computerX: WORLD.width / 2 - 120 - 75, // Move computer 50px to the left
+    computerX: WORLD.width / 2 - 80, // Centered in rectangular canvas
     computerY: WORLD.height - 395, // Much higher up from bottom
     computerWidth: 160, // Bigger size
     computerHeight: 120, // Bigger size
@@ -716,7 +899,7 @@
   const insideRescueShip = {
     playerX: 0,
     playerY: 0,
-    computerX: WORLD.width / 2 - 120 - 75,
+    computerX: WORLD.width / 2 - 80,
     computerY: WORLD.height - 395,
     computerWidth: 160,
     computerHeight: 120,
@@ -742,7 +925,7 @@
     spawnRate: 150, // أسرع في الظهور (أكثر عدداً وأصعب)
     gateWidth: 90,
     gateHeight: 180,
-    gateX: WORLD.width - 100, // Default position, will be set properly by initializeGatePosition
+    gateX: WORLD.width - 120, // Moved further right for rectangular canvas
     gateY: WORLD.height / 2 - 90, // Default position, will be set properly by initializeGatePosition
     shipX: 40,
     // Survival timer system
@@ -792,8 +975,21 @@
   };
   
   // Exit/Enter buttons
-  const exitButton = { x: 16, y: WORLD.height - 56, w: 190, h: 36, visible: false };
+  const exitButton = { x: 16, y: WORLD.height - 56, w: 250, h: 50, visible: false };
   const enterButton = { x: 16, y: WORLD.height - 56, w: 190, h: 36, visible: false };
+  
+  // Clickable speech bubbles
+  const speechBubbles = {
+    interact: { x: 0, y: 0, w: 0, h: 0, visible: false, text: '' },
+    exit: { x: 0, y: 0, w: 0, h: 0, visible: false, text: '' }
+  };
+  
+  // Canvas controls for landscape mode
+  const canvasControls = {
+    joystick: { x: 0, y: 0, w: 0, h: 0, visible: false },
+    interactButton: { x: 0, y: 0, w: 0, h: 0, visible: false },
+    exitButton: { x: 0, y: 0, w: 0, h: 0, visible: false }
+  };
   
   // Quiz system
   const quiz = {
@@ -992,7 +1188,7 @@
       speed: 0.08 // Faster scene transitions
     },
     // Ship and beam for flying scene
-    shipX: WORLD.width - 250, // Ship position on the right
+    shipX: WORLD.width - 300, // Ship position on the right - adjusted for wider canvas
     shipY: 80,
     shipWidth: 200,
     shipHeight: 120,
@@ -1015,7 +1211,7 @@
   // Cinematic state after win
   const cinematic = {
     active: false,
-    x: WORLD.width - 50, // Start from right side
+    x: WORLD.width - 80, // Start from right side - adjusted for wider canvas
     y: 50, // Start from top
     vx: -2.2,
     vy: 1.2,
@@ -1041,53 +1237,11 @@
       startMusic();
     }
     
-    // Computer interaction
-    if (key === 'F1') {
-      e.preventDefault();
-      
-      // Check for rescue ship boarding first
-      if (currentScene === 'outside_ship' && outsideShip.rescueShip.canBoard) {
-        const distance = Math.sqrt(
-          Math.pow(player.x - outsideShip.rescueShip.x, 2) + 
-          Math.pow(player.y - outsideShip.rescueShip.y, 2)
-        );
-        
-        if (distance < 100) { // Within boarding range
-          boardRescueShip();
-          return;
-        }
-      }
-      
-      // Force update interaction check
-      if (currentScene === 'inside_ship') {
-        insideShip.showInteraction = isPlayerNearComputer();
-        
-        if (insideShip.showInteraction) {
-          startQuiz();
-        }
-      }
-      
-      // No computer interaction in rescue ship - only celebration
-      return;
-    }
+    // Computer interaction - removed F1 key, now handled by mouse clicks
+    // This section is kept for backward compatibility but F1 is no longer used
     
-    // Exit ship with F3
-    if (key === 'F3') {
-      e.preventDefault();
-      console.log('F3 pressed, currentScene:', currentScene);
-      
-      if (currentScene === 'inside_ship') {
-        if (!exitConfirmation.visible) {
-          // Show exit confirmation dialog
-          showExitConfirmation();
-        } else {
-          console.log('Exit confirmation already visible, ignoring F3');
-        }
-      } else {
-        console.log('Not in inside_ship or inside_rescue_ship scene, cannot exit');
-      }
-      return;
-    }
+    // Exit ship - removed F3 key, now handled by mouse clicks
+    // This section is kept for backward compatibility but F3 is no longer used
     
     // Action buttons are now handled by direct click/touch events
     
@@ -1320,22 +1474,97 @@
     const x = gameCoords.x;
     const y = gameCoords.y;
 
+    // Check for restart button in game over screen
+    if (gameOver) {
+      const buttonX = WORLD.width / 2 - 100;
+      const buttonY = WORLD.height / 2 + 80;
+      const buttonWidth = 200;
+      const buttonHeight = 50;
+      
+      if (x >= buttonX && x <= buttonX + buttonWidth && y >= buttonY && y <= buttonY + buttonHeight) {
+        console.log('Restart button clicked in game over screen');
+        window.location.reload();
+        return;
+      }
+    }
+
+    // Check for canvas joystick (landscape mode)
+    if (canvasControls.joystick.visible) {
+      const joystick = canvasControls.joystick;
+      if (x >= joystick.x && x <= joystick.x + joystick.w && y >= joystick.y && y <= joystick.y + joystick.h) {
+        console.log('Canvas joystick clicked');
+        // Handle joystick interaction
+        return;
+      }
+    }
+
+    // Check for canvas controls first (landscape mode)
+    if (canvasControls.interactButton.visible) {
+      const button = canvasControls.interactButton;
+      if (x >= button.x && x <= button.x + button.w && y >= button.y && y <= button.y + button.h) {
+        console.log('Canvas interact button clicked');
+        handleInteractButton();
+        return;
+      }
+    }
+    
+    if (canvasControls.exitButton.visible) {
+      const button = canvasControls.exitButton;
+      if (x >= button.x && x <= button.x + button.w && y >= button.y && y <= button.y + button.h) {
+        console.log('Canvas exit button clicked');
+        handleExitButton();
+        return;
+      }
+    }
+    
+    // Check for speech bubble clicks
+    if (speechBubbles.interact.visible) {
+      const bubble = speechBubbles.interact;
+      if (x >= bubble.x && x <= bubble.x + bubble.w && y >= bubble.y && y <= bubble.y + bubble.h) {
+        console.log('Interact speech bubble clicked');
+        handleInteractButton();
+        return;
+      }
+    }
+    
+    if (speechBubbles.exit.visible) {
+      const bubble = speechBubbles.exit;
+      console.log('Exit speech bubble visible, checking click at:', x, y);
+      console.log('Exit bubble bounds:', bubble.x, bubble.y, bubble.w, bubble.h);
+      if (x >= bubble.x && x <= bubble.x + bubble.w && y >= bubble.y && y <= bubble.y + bubble.h) {
+        console.log('Exit speech bubble clicked - calling handleExitButton');
+        handleExitButton();
+        return;
+      }
+      console.log('Click not within exit bubble bounds');
+    } else {
+      console.log('Exit speech bubble not visible');
+    }
+
     // Exit confirmation dialog
     if (exitConfirmation.visible) {
+      console.log('Exit confirmation visible, checking button clicks at:', x, y);
+      console.log('Yes button bounds:', exitConfirmation.yesButton.x, exitConfirmation.yesButton.y, exitConfirmation.yesButton.width, exitConfirmation.yesButton.height);
+      
       // Yes button
       if (x >= exitConfirmation.yesButton.x && x <= exitConfirmation.yesButton.x + exitConfirmation.yesButton.width && 
           y >= exitConfirmation.yesButton.y && y <= exitConfirmation.yesButton.y + exitConfirmation.yesButton.height) {
+        console.log('Yes button clicked - starting exit transition');
         hideExitConfirmation();
         startExitShipTransition('inside_ship', 'outside_ship');
         return;
       }
       
       // No button
+      console.log('No button bounds:', exitConfirmation.noButton.x, exitConfirmation.noButton.y, exitConfirmation.noButton.width, exitConfirmation.noButton.height);
       if (x >= exitConfirmation.noButton.x && x <= exitConfirmation.noButton.x + exitConfirmation.noButton.width && 
           y >= exitConfirmation.noButton.y && y <= exitConfirmation.noButton.y + exitConfirmation.noButton.height) {
+        console.log('No button clicked - staying in ship');
         hideExitConfirmation();
         return;
       }
+      
+      console.log('No button clicked - coordinates not within bounds');
     }
 
     // Inside-ship: Exit button
@@ -1354,6 +1583,9 @@
         outsideShip.shipArrivalBeamActive = false; // No beam needed
         outsideShip.shipArrivalBeamPulseT = 0;
         outsideShip.shipMoving = true; // Start moving from right to left
+        
+        // Start Samud music for survival stage
+        startSamudMusic();
         return;
       }
     }
@@ -1370,6 +1602,9 @@
         // Reset survival timer when entering ship
         outsideShip.survivalTimer = 0;
         outsideShip.difficultyMultiplier = 1.0;
+        
+        // Stop Samud music and return to background music
+        stopSamudMusic();
         return;
       }
     }
@@ -1512,6 +1747,15 @@
     
     console.log('Initializing touch controls...');
     
+    // Force show joystick on iPad
+    if (isIPad) {
+      joystick.style.display = 'block';
+      joystick.style.opacity = '1';
+      joystick.style.pointerEvents = 'auto';
+      knob.style.pointerEvents = 'auto';
+      console.log('iPad detected, forcing joystick visibility');
+    }
+    
     // Get joystick position and size
     const updateJoystickBounds = () => {
       const rect = joystick.getBoundingClientRect();
@@ -1526,7 +1770,7 @@
     
     // Touch events
     joystick.addEventListener('touchstart', (e) => {
-      console.log('Touch start detected');
+      console.log('Touch start detected on joystick');
       e.preventDefault();
       e.stopPropagation();
       joystickActive = true;
@@ -1544,6 +1788,7 @@
     
     joystick.addEventListener('touchmove', (e) => {
       if (joystickActive) {
+        console.log('Touch move detected on joystick');
         e.preventDefault();
         e.stopPropagation();
         if (e.touches && e.touches.length > 0) {
@@ -1553,14 +1798,14 @@
     }, { passive: false });
     
     joystick.addEventListener('touchend', (e) => {
-      console.log('Touch end detected');
+      console.log('Touch end detected on joystick');
       e.preventDefault();
       e.stopPropagation();
       resetJoystick();
     }, { passive: false });
     
     joystick.addEventListener('touchcancel', (e) => {
-      console.log('Touch cancel detected');
+      console.log('Touch cancel detected on joystick');
       e.preventDefault();
       e.stopPropagation();
       resetJoystick();
@@ -1749,6 +1994,10 @@
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
+    console.log('Canvas click on confirmation dialog at:', x, y);
+    console.log('Yes button bounds:', exitConfirmation.yesButton.x, exitConfirmation.yesButton.y, exitConfirmation.yesButton.width, exitConfirmation.yesButton.height);
+    console.log('No button bounds:', exitConfirmation.noButton.x, exitConfirmation.noButton.y, exitConfirmation.noButton.width, exitConfirmation.noButton.height);
+    
     // Yes button
     if (x >= exitConfirmation.yesButton.x && x <= exitConfirmation.yesButton.x + exitConfirmation.yesButton.width && 
         y >= exitConfirmation.yesButton.y && y <= exitConfirmation.yesButton.y + exitConfirmation.yesButton.height) {
@@ -1769,6 +2018,8 @@
       hideExitConfirmation();
       return;
     }
+    
+    console.log('Canvas click not on confirmation buttons');
   }
 
   function handleConfirmationTouch(e) {
@@ -1782,9 +2033,15 @@
     const x = gameCoords.x;
     const y = gameCoords.y;
     
+    console.log('Touch event on confirmation dialog at:', x, y);
+    console.log('Yes button bounds:', exitConfirmation.yesButton.x, exitConfirmation.yesButton.y, exitConfirmation.yesButton.width, exitConfirmation.yesButton.height);
+    console.log('No button bounds:', exitConfirmation.noButton.x, exitConfirmation.noButton.y, exitConfirmation.noButton.width, exitConfirmation.noButton.height);
+    
     // Yes button
     if (x >= exitConfirmation.yesButton.x && x <= exitConfirmation.yesButton.x + exitConfirmation.yesButton.width && 
         y >= exitConfirmation.yesButton.y && y <= exitConfirmation.yesButton.y + exitConfirmation.yesButton.height) {
+      e.preventDefault();
+      e.stopPropagation();
       console.log('Yes button touched - exiting ship');
       hideExitConfirmation();
       startExitShipTransition('inside_ship', 'outside_ship');
@@ -1794,10 +2051,14 @@
     // No button
     if (x >= exitConfirmation.noButton.x && x <= exitConfirmation.noButton.x + exitConfirmation.noButton.width && 
         y >= exitConfirmation.noButton.y && y <= exitConfirmation.noButton.y + exitConfirmation.noButton.height) {
+      e.preventDefault();
+      e.stopPropagation();
       console.log('No button touched - staying in ship');
       hideExitConfirmation();
       return;
     }
+    
+    console.log('Touch not on confirmation buttons');
   }
 
   function initActionButtons() {
@@ -1809,7 +2070,7 @@
     console.log('Buttons found:', { 
       interactButton: !!interactButton, 
       exitButton: !!exitButton, 
-      restartButton: !!restartButton 
+      restartButton: !!restartButton
     });
     
     if (interactButton) {
@@ -2115,7 +2376,9 @@
     }
     
     // IMMEDIATE TRANSITION - No animation, just switch scenes
+    console.log('Changing scene from', currentScene, 'to', to);
     currentScene = to;
+    console.log('Scene changed to:', currentScene);
     
     // Setup player position for outside ship scene
     if (to === 'outside_ship') {
@@ -2160,9 +2423,13 @@
       outsideShip.shipFire.particles = [];
       outsideShip.shipFire.floatT = 0;
       outsideShip.shipFire.floatOffset = 0;
+      
+      // Start Samud music for survival stage
+      console.log('Starting Samud music for survival stage');
+      startSamudMusic();
     }
     
-    console.log('Exit transition completed immediately!');
+    console.log('Exit transition completed immediately! Scene is now:', currentScene);
   }
 
   function updateSceneTransition() {
@@ -2663,6 +2930,9 @@
         // Reset ship arrival state when entering
         outsideShip.shipArriving = false;
         outsideShip.shipArrivalBeamActive = false;
+        
+        // Stop Samud music and return to background music
+        stopSamudMusic();
       }
     }
   }
@@ -2727,6 +2997,9 @@
         insideShip.backgroundY = 0;
         insideShip.fadeIn = 0;
         insideShip.floatT = 0;
+        
+        // Stop Samud music and return to background music
+        stopSamudMusic();
         insideShip.floatOffset = 0;
       }
     }
@@ -3131,6 +3404,10 @@
   function spawnShipFireParticle() {
     if (outsideShip.shipFire.intensity <= 0) return;
     
+    // Limit particles on low-end devices
+    const maxParticles = isLowEndDevice ? 15 : 30;
+    if (outsideShip.shipFire.particles.length >= maxParticles) return;
+    
     const shipX = outsideShip.shipArrivalX;
     const shipY = outsideShip.shipArrivalY;
     const shipWidth = 200;
@@ -3140,14 +3417,18 @@
     const baseX = shipX + shipWidth * 0.3 + Math.random() * shipWidth * 0.4;
     const baseY = shipY + shipHeight * 0.8;
     
+    // Reduce particle complexity on low-end devices
+    const particleSize = isLowEndDevice ? (2 + Math.random() * 2) : (3 + Math.random() * 4);
+    const particleLife = isLowEndDevice ? (15 + Math.random() * 20) : (20 + Math.random() * 30);
+    
     outsideShip.shipFire.particles.push({
       x: baseX,
       y: baseY,
       vx: (Math.random() - 0.5) * 2,
       vy: -2 - Math.random() * 3,
-      size: 3 + Math.random() * 4,
-      life: 20 + Math.random() * 30,
-      maxLife: 20 + Math.random() * 30,
+      size: particleSize,
+      life: particleLife,
+      maxLife: particleLife,
       color: `hsl(${Math.random() * 60 + 10}, 100%, ${50 + Math.random() * 30}%)`, // Orange to red
       alpha: 0.8 + Math.random() * 0.2
     });
@@ -3162,18 +3443,21 @@
     outsideShip.shipFire.floatT += 0.05;
     outsideShip.shipFire.floatOffset = Math.sin(outsideShip.shipFire.floatT) * 3;
     
-    // Spawn fire particles based on intensity
-    if (outsideShip.shipFire.intensity > 0.1 && Math.random() < outsideShip.shipFire.intensity * 0.5) {
+    // Spawn fire particles based on intensity - reduced frequency on low-end devices
+    const spawnRate = isLowEndDevice ? 0.3 : 0.5;
+    if (outsideShip.shipFire.intensity > 0.1 && Math.random() < outsideShip.shipFire.intensity * spawnRate) {
       spawnShipFireParticle();
     }
     
-    // Play fire sound when intensity is high
-    if (outsideShip.shipFire.intensity > 0.5 && Math.random() < 0.1) {
+    // Play fire sound when intensity is high - reduced frequency on low-end devices
+    const soundRate = isLowEndDevice ? 0.05 : 0.1;
+    if (outsideShip.shipFire.intensity > 0.5 && Math.random() < soundRate) {
       playSound(audio.beamSound); // Use existing sound for fire crackling
     }
     
-    // Update existing fire particles
-    for (let i = outsideShip.shipFire.particles.length - 1; i >= 0; i--) {
+    // Update existing fire particles - skip some updates on low-end devices
+    const updateStep = isLowEndDevice ? 2 : 1; // Update every other particle on low-end devices
+    for (let i = outsideShip.shipFire.particles.length - 1; i >= 0; i -= updateStep) {
       const p = outsideShip.shipFire.particles[i];
       p.x += p.vx;
       p.y += p.vy;
@@ -3270,17 +3554,21 @@
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
     
-    // Draw fire particles
-    for (const p of outsideShip.shipFire.particles) {
+    // Draw fire particles - skip some on low-end devices
+    const drawStep = isLowEndDevice ? 2 : 1;
+    for (let i = 0; i < outsideShip.shipFire.particles.length; i += drawStep) {
+      const p = outsideShip.shipFire.particles[i];
       ctx.fillStyle = p.color.replace(')', `, ${p.alpha})`);
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
       ctx.fill();
       
-      // Add glow effect
-      ctx.shadowColor = p.color;
-      ctx.shadowBlur = 10;
-      ctx.fill();
+      // Add glow effect only on high-end devices
+      if (!isLowEndDevice) {
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 10;
+        ctx.fill();
+      }
     }
     
     ctx.restore();
@@ -3449,22 +3737,9 @@
     // Clear canvas first
     ctx.clearRect(0, 0, WORLD.width, WORLD.height);
 
-    // Draw space background with scaling effect
-    if (isImageReady(assets.background)) {
-      const scale = rescueBoardingTransition.backgroundScale;
-      const opacity = rescueBoardingTransition.backgroundOpacity;
-      const centerX = WORLD.width / 2;
-      const centerY = WORLD.height / 2;
-      
-      ctx.globalAlpha = opacity;
-      ctx.drawImage(
-        assets.background,
-        centerX - (WORLD.width * scale) / 2,
-        centerY - (WORLD.height * scale) / 2,
-        WORLD.width * scale,
-        WORLD.height * scale
-      );
-    }
+    // Draw simple black background for celebration
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, WORLD.width, WORLD.height);
 
     // Draw rescue ship with beam effect
     if (outsideShip.rescueShip.active) {
@@ -3548,6 +3823,12 @@
     victoryCelebration.message2T = victoryCelebration.maxMessageT;
     victoryCelebration.fadeOut = 0;
     
+    // Start celebration music
+    startCelebrationMusic();
+    
+    // Play victory sound
+    playSound(audio.victorySound);
+    
     // Create flying ribbons
     for (let i = 0; i < 30; i++) {
       victoryCelebration.ribbons.push({
@@ -3611,6 +3892,15 @@
     // Update fade out effect
     if (victoryCelebration.message1T <= 0 && victoryCelebration.message2T <= 0) {
       victoryCelebration.fadeOut = Math.min(1, victoryCelebration.fadeOut + victoryCelebration.fadeOutSpeed);
+    }
+    
+    // Play random celebration sounds
+    if (Math.random() < 0.1) { // 10% chance each frame
+      if (Math.random() < 0.5) {
+        playSound(audio.confettiSound);
+      } else {
+        playSound(audio.fireworksSound);
+      }
     }
 
     // Update ribbons
@@ -3983,6 +4273,9 @@
         player.alpha = 1;
         // Reset survival timer when entering ship
         outsideShip.survivalTimer = 0;
+        
+        // Stop Samud music and return to background music
+        stopSamudMusic();
         outsideShip.difficultyMultiplier = 1.0;
       }
     }
@@ -4406,7 +4699,28 @@
     ctx.fillText('انتهت اللعبة!', WORLD.width / 2, WORLD.height / 2);
     ctx.font = '24px Segoe UI, Roboto, Arial';
     ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    ctx.fillText('اضفطي F5 لإعادة المحاولة', WORLD.width / 2, WORLD.height / 2 + 40);
+    ctx.fillText('اضغطي على زر إعادة اللعب أدناه', WORLD.width / 2, WORLD.height / 2 + 40);
+    
+    // Draw restart button
+    const buttonX = WORLD.width / 2 - 100;
+    const buttonY = WORLD.height / 2 + 80;
+    const buttonWidth = 200;
+    const buttonHeight = 50;
+    
+    // Button background
+    ctx.fillStyle = 'rgba(255, 100, 100, 0.8)';
+    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+    
+    // Button border
+    ctx.strokeStyle = 'rgba(255, 150, 150, 0.6)';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(buttonX, buttonY, buttonWidth, buttonHeight);
+    
+    // Button text
+    ctx.font = '18px Segoe UI, Roboto, Arial';
+    ctx.fillStyle = 'white';
+    ctx.fillText('🔄 إعادة اللعب', buttonX + buttonWidth/2, buttonY + buttonHeight/2 + 6);
+    
     ctx.restore();
   }
 
@@ -4601,9 +4915,9 @@
       
       // Different text based on win status
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      let text = isTouchDevice ? 'اضغط 🎮️ للعب' : 'اضغط F1 للعب';
+      let text = isTouchDevice ? 'اضغط 🎮️ للعب' : 'اضغط للعب';
       if (quiz.hasWon && quiz.canRetryAfterWin) {
-        text = isTouchDevice ? 'اضغط 🎮️ للعب مرة أخرى' : 'اضغط F1 للعب مرة أخرى';
+        text = isTouchDevice ? 'اضغط 🎮️ للعب مرة أخرى' : 'اضغط للعب مرة أخرى';
       }
       
       const textWidth = ctx.measureText(text).width;
@@ -4612,6 +4926,16 @@
       const boxY = insideShip.playerY - 35;
       const boxWidth = textWidth + boxPadding * 2;
       const boxHeight = 30;
+      
+      // Store speech bubble position for click detection
+      speechBubbles.interact = { 
+        x: boxX, 
+        y: boxY, 
+        w: boxWidth, 
+        h: boxHeight, 
+        visible: true, 
+        text: text 
+      };
       
       // Draw background box for better visibility
       ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
@@ -4629,8 +4953,8 @@
       // Draw text
       ctx.fillStyle = 'rgba(255, 255, 255, 1)';
       ctx.fillText(
-        text, 
-        insideShip.playerX + player.width / 2, 
+        text,
+        insideShip.playerX + player.width / 2,
         insideShip.playerY - 15
       );
       ctx.restore();
@@ -4638,9 +4962,15 @@
     
     // Draw Exit Ship button if at far left
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const exitText = isTouchDevice ? '  اضغط 🚪 للخروج' : '  اضغط F3 مرتين للخروج';
-    exitButton.visible && drawButton(exitButton.x, exitButton.y, exitButton.w, exitButton.h, exitText);
+    const exitText = isTouchDevice ? '  اضغط 🚪 للخروج' : '  اضغط للخروج';
+    if (exitButton.visible) {
+      console.log('Drawing exit button at:', exitButton.x, exitButton.y, 'size:', exitButton.w, exitButton.h);
+      drawClickableButton(exitButton.x, exitButton.y, exitButton.w, exitButton.h, exitText, 'exit');
+    }
 
+    // Draw canvas controls for landscape mode
+    drawCanvasControls();
+    
     // Draw UI
     ctx.save();
     ctx.font = '18px Segoe UI, Roboto, Arial';
@@ -4653,7 +4983,7 @@
       if (isTouchDevice) {
         ctx.fillText('استخدم الـ JoyStick للتحرك — اضغط 🔧 للتفاعل مع الكمبيوتر — اضغط 🚪 للخروج من المركبة', WORLD.width / 2, 28);
       } else {
-        ctx.fillText('الأسهم للتحرك بحرية — اضغط F1 للتفاعل مع الكمبيوتر — اضغط F3 مرتين للخروج من المركبة', WORLD.width / 2, 28);
+        ctx.fillText('الأسهم للتحرك بحرية — اضغط للعب — اضغط للخروج من المركبة', WORLD.width / 2, 28);
       }
     }
     ctx.restore();
@@ -4703,11 +5033,14 @@
       if (isTouchDevice) {
         ctx.fillText('اضغط 🔧 للتفاعل', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
       } else {
-        ctx.fillText('اضغط F1 للتفاعل', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
+        ctx.fillText('اضغط للعب', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
       }
       ctx.restore();
     }
 
+    // Draw canvas controls for landscape mode
+    drawCanvasControls();
+    
     // Draw UI
     ctx.save();
     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -4722,7 +5055,7 @@
       if (isTouchDevice) {
         ctx.fillText('استخدم الـ JoyStick للتحرك — اضغط 🔧 للتفاعل مع الكمبيوتر — اضغط 🚪 للخروج من المركبة', WORLD.width / 2, 28);
       } else {
-        ctx.fillText('الأسهم للتحرك بحرية — اضغط F1 للتفاعل مع الكمبيوتر — اضغط F3 مرتين للخروج من المركبة', WORLD.width / 2, 28);
+        ctx.fillText('الأسهم للتحرك بحرية — اضغط للعب — اضغط للخروج من المركبة', WORLD.width / 2, 28);
       }
     }
     ctx.restore();
@@ -4770,11 +5103,14 @@
       if (isTouchDevice) {
         ctx.fillText('اضغط 🔧 للتفاعل', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
       } else {
-        ctx.fillText('اضغط F1 للتفاعل', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
+        ctx.fillText('اضغط للعب', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
       }
       ctx.restore();
     }
 
+    // Draw canvas controls for landscape mode
+    drawCanvasControls();
+    
     // Draw UI
     ctx.save();
     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -4789,7 +5125,7 @@
       if (isTouchDevice) {
         ctx.fillText('استخدم الـ JoyStick للتحرك — اضغط 🔧 للتفاعل مع الكمبيوتر — اضغط 🚪 للخروج من المركبة', WORLD.width / 2, 28);
       } else {
-        ctx.fillText('الأسهم للتحرك بحرية — اضغط F1 للتفاعل مع الكمبيوتر — اضغط F3 للخروج من المركبة', WORLD.width / 2, 28);
+        ctx.fillText('الأسهم للتحرك بحرية — اضغط للعب — اضغط للخروج من المركبة', WORLD.width / 2, 28);
       }
     }
     ctx.restore();
@@ -5530,6 +5866,107 @@
     ctx.fillText(label, x + w / 2, y + h / 2 + 6);
     ctx.restore();
   }
+  
+  function drawClickableButton(x, y, w, h, label, bubbleType) {
+    // Store button position for click detection
+    if (bubbleType) {
+      speechBubbles[bubbleType] = { x, y, w, h, visible: true, text: label };
+      console.log('Updated speech bubble for', bubbleType, 'at:', x, y, 'size:', w, h);
+    }
+    
+    ctx.save();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.82)';
+    ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = 'rgba(100, 150, 255, 0.95)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, w, h);
+    ctx.font = '16px Segoe UI, Roboto, Arial';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.fillText(label, x + w / 2, y + h / 2 + 6);
+    ctx.restore();
+  }
+  
+  function drawCanvasControls() {
+    // Only show in landscape mode on iPad
+    const isLandscape = window.innerWidth > window.innerHeight;
+    const isIPad = /iPad/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    
+    if (!isLandscape || !isIPad) return;
+    
+    ctx.save();
+    
+    // Draw joystick area (LEFT side)
+    const joystickX = 20;
+    const joystickY = WORLD.height - 120;
+    const joystickSize = 100;
+    
+    canvasControls.joystick = { x: joystickX, y: joystickY, w: joystickSize, h: joystickSize, visible: true };
+    
+    // Joystick base
+    ctx.fillStyle = 'rgba(100, 150, 255, 0.3)';
+    ctx.beginPath();
+    ctx.arc(joystickX + joystickSize/2, joystickY + joystickSize/2, joystickSize/2, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Joystick border
+    ctx.strokeStyle = 'rgba(150, 200, 255, 0.6)';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    
+    // Joystick knob
+    const knobX = joystickX + joystickSize/2;
+    const knobY = joystickY + joystickSize/2;
+    const knobRadius = 20;
+    
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.beginPath();
+    ctx.arc(knobX, knobY, knobRadius, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.strokeStyle = 'rgba(100, 150, 255, 0.8)';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    
+    // Draw action buttons (RIGHT side)
+    const buttonY = WORLD.height - 120;
+    const buttonWidth = 80;
+    const buttonHeight = 40;
+    const buttonSpacing = 50;
+    
+    // Interact button (right side)
+    const interactX = WORLD.width - 100;
+    canvasControls.interactButton = { x: interactX, y: buttonY, w: buttonWidth, h: buttonHeight, visible: true };
+    
+    ctx.fillStyle = 'rgba(100, 150, 255, 0.8)';
+    ctx.fillRect(interactX, buttonY, buttonWidth, buttonHeight);
+    ctx.strokeStyle = 'rgba(150, 200, 255, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(interactX, buttonY, buttonWidth, buttonHeight);
+    
+    ctx.font = '14px Segoe UI, Roboto, Arial';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.fillText('🎮 لعب', interactX + buttonWidth/2, buttonY + buttonHeight/2 + 5);
+    
+    // Exit button (right side, below interact)
+    const exitX = WORLD.width - 100;
+    const exitY = buttonY + buttonSpacing;
+    canvasControls.exitButton = { x: exitX, y: exitY, w: buttonWidth, h: buttonHeight, visible: true };
+    
+    ctx.fillStyle = 'rgba(255, 100, 100, 0.8)';
+    ctx.fillRect(exitX, exitY, buttonWidth, buttonHeight);
+    ctx.strokeStyle = 'rgba(255, 150, 150, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(exitX, exitY, buttonWidth, buttonHeight);
+    
+    ctx.font = '14px Segoe UI, Roboto, Arial';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.fillText('🚪 خروج', exitX + buttonWidth/2, exitY + buttonHeight/2 + 5);
+    
+    ctx.restore();
+  }
 
   function drawMainScene() {
     // Clear any previous content
@@ -5651,6 +6088,9 @@
     gameWin = false;
     obstacleTimer = 0;
     winAt = 0;
+    
+    // Start Samud music for survival stage
+    startSamudMusic();
     
     console.log('Game states reset:', { currentScene, gameOver, gameWin });
     
