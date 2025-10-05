@@ -35,6 +35,21 @@
   function forceShowTouchControls() {
     console.log('Forcing touch controls visibility...');
     
+    // Check if we're on a laptop/desktop
+    const isLaptop = window.innerWidth >= 1025;
+    const hasHover = window.matchMedia('(hover: hover)').matches;
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    // Only hide touch controls on large screens (1025px and above)
+    if (window.innerWidth >= 1025 && (isLaptop || hasHover || !isTouchDevice)) {
+      console.log('Large screen detected (1025px+), NOT showing touch controls');
+      const joystickContainer = document.querySelector('.joystick-container');
+      const actionButtonsContainer = document.querySelector('.action-buttons-container');
+      if (joystickContainer) joystickContainer.style.display = 'none';
+      if (actionButtonsContainer) actionButtonsContainer.style.display = 'none';
+      return;
+    }
+    
     const joystickContainer = document.querySelector('.joystick-container');
     const actionButtonsContainer = document.querySelector('.action-buttons-container');
     const joystick = document.getElementById('virtualJoystick');
@@ -1815,8 +1830,20 @@
   function initTouchControls() {
     // Check if we're on a touch device
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (!isTouchDevice) {
-      console.log('Not a touch device, skipping touch controls');
+    
+    // Check if we're on a laptop/desktop with large screen
+    const isLaptop = window.innerWidth >= 1025;
+    
+    // Check if device has mouse (hover capability)
+    const hasHover = window.matchMedia('(hover: hover)').matches;
+    
+    // Only hide touch controls on large screens (1025px and above)
+    if (window.innerWidth >= 1025 && (isLaptop || hasHover || !isTouchDevice)) {
+      console.log('Large screen detected (1025px+), hiding touch controls');
+      const joystickContainer = document.querySelector('.joystick-container');
+      const actionButtonsContainer = document.querySelector('.action-buttons-container');
+      if (joystickContainer) joystickContainer.style.display = 'none';
+      if (actionButtonsContainer) actionButtonsContainer.style.display = 'none';
       return;
     }
     
