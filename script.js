@@ -179,6 +179,10 @@
         
         console.log('Container size:', { containerWidth, containerHeight });
         
+        // Check if we're in landscape mode
+        const isLandscape = window.innerWidth > window.innerHeight;
+        const isMobile = window.innerWidth <= 1024 || 'ontouchstart' in window;
+        
         // Ensure minimum size
         const minWidth = 300;
         const minHeight = 200;
@@ -186,15 +190,27 @@
         const effectiveHeight = Math.max(containerHeight, minHeight);
         
         // Calculate scale to fit container while maintaining aspect ratio
-        const scaleX_temp = effectiveWidth / GAME_WIDTH;
-        const scaleY_temp = effectiveHeight / GAME_HEIGHT;
-        const scale = Math.min(scaleX_temp, scaleY_temp, 2); // Max scale of 2 for performance
+        let scaleX_temp = effectiveWidth / GAME_WIDTH;
+        let scaleY_temp = effectiveHeight / GAME_HEIGHT;
+        let scale;
+        
+        // Special handling for landscape mode on mobile/tablet
+        if (isLandscape && isMobile) {
+          // In landscape mode, prioritize fitting the canvas completely
+          // Use a more conservative scale to prevent cutoff
+          scale = Math.min(scaleX_temp, scaleY_temp, 1.2); // Lower max scale for landscape
+          console.log('Landscape mobile mode - using conservative scale:', scale);
+        } else {
+          // Normal portrait mode or desktop
+          scale = Math.min(scaleX_temp, scaleY_temp, 2); // Max scale of 2 for performance
+          console.log('Portrait/Desktop mode - using normal scale:', scale);
+        }
         
         // Calculate actual canvas size
         const canvasWidth = GAME_WIDTH * scale;
         const canvasHeight = GAME_HEIGHT * scale;
         
-        console.log('Calculated scale:', { scale, canvasWidth, canvasHeight });
+        console.log('Calculated scale:', { scale, canvasWidth, canvasHeight, isLandscape, isMobile });
         
         // Set canvas display size
         canvas.style.width = canvasWidth + 'px';
@@ -229,7 +245,9 @@
           scale, 
           offsetX, 
           offsetY,
-          devicePixelRatio 
+          devicePixelRatio,
+          isLandscape,
+          isMobile
         });
       }, 16); // 60fps throttling
     }
@@ -6021,13 +6039,13 @@
     canvasControls.joystick = { x: joystickX, y: joystickY, w: joystickSize, h: joystickSize, visible: true };
     
     // Joystick base
-    ctx.fillStyle = 'rgba(100, 150, 255, 0.3)';
+    ctx.fillStyle = 'rgba(100, 100, 100, 0.8)';
     ctx.beginPath();
     ctx.arc(joystickX + joystickSize/2, joystickY + joystickSize/2, joystickSize/2, 0, Math.PI * 2);
     ctx.fill();
     
     // Joystick border
-    ctx.strokeStyle = 'rgba(150, 200, 255, 0.6)';
+    ctx.strokeStyle = 'rgba(150, 150, 150, 0.9)';
     ctx.lineWidth = 3;
     ctx.stroke();
     
@@ -6036,12 +6054,12 @@
     const knobY = joystickY + joystickSize/2;
     const knobRadius = 20;
     
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.fillStyle = 'rgba(200, 200, 200, 0.9)';
     ctx.beginPath();
     ctx.arc(knobX, knobY, knobRadius, 0, Math.PI * 2);
     ctx.fill();
     
-    ctx.strokeStyle = 'rgba(100, 150, 255, 0.8)';
+    ctx.strokeStyle = 'rgba(100, 100, 100, 1)';
     ctx.lineWidth = 3;
     ctx.stroke();
     
@@ -6055,9 +6073,9 @@
     const interactX = WORLD.width - 100;
     canvasControls.interactButton = { x: interactX, y: buttonY, w: buttonWidth, h: buttonHeight, visible: true };
     
-    ctx.fillStyle = 'rgba(100, 150, 255, 0.8)';
+    ctx.fillStyle = 'rgba(100, 100, 100, 0.8)';
     ctx.fillRect(interactX, buttonY, buttonWidth, buttonHeight);
-    ctx.strokeStyle = 'rgba(150, 200, 255, 0.6)';
+    ctx.strokeStyle = 'rgba(150, 150, 150, 0.9)';
     ctx.lineWidth = 2;
     ctx.strokeRect(interactX, buttonY, buttonWidth, buttonHeight);
     
@@ -6071,9 +6089,9 @@
     const exitY = buttonY + buttonSpacing;
     canvasControls.exitButton = { x: exitX, y: exitY, w: buttonWidth, h: buttonHeight, visible: true };
     
-    ctx.fillStyle = 'rgba(255, 100, 100, 0.8)';
+    ctx.fillStyle = 'rgba(100, 100, 100, 0.8)';
     ctx.fillRect(exitX, exitY, buttonWidth, buttonHeight);
-    ctx.strokeStyle = 'rgba(255, 150, 150, 0.6)';
+    ctx.strokeStyle = 'rgba(150, 150, 150, 0.9)';
     ctx.lineWidth = 2;
     ctx.strokeRect(exitX, exitY, buttonWidth, buttonHeight);
     

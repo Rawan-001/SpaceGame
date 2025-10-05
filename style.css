@@ -6,7 +6,7 @@
 
 /* Prevent any theme interference */
 html, body, .game-container, #gameCanvas {
-  background: radial-gradient(circle at 20% 20%, #4a5482, #1b203a 60%) !important;
+  background: #1b203a !important;
   background-color: #1b203a !important;
   color-scheme: dark !important;
 }
@@ -14,7 +14,7 @@ html, body, .game-container, #gameCanvas {
 /* Override any system theme colors */
 @media (prefers-color-scheme: light) {
   html, body, .game-container, #gameCanvas {
-    background: radial-gradient(circle at 20% 20%, #4a5482, #1b203a 60%) !important;
+    background: #1b203a !important;
     background-color: #1b203a !important;
     color-scheme: dark !important;
   }
@@ -22,7 +22,7 @@ html, body, .game-container, #gameCanvas {
 
 @media (prefers-color-scheme: dark) {
   html, body, .game-container, #gameCanvas {
-    background: radial-gradient(circle at 20% 20%, #4a5482, #1b203a 60%) !important;
+    background: #1b203a !important;
     background-color: #1b203a !important;
     color-scheme: dark !important;
   }
@@ -35,108 +35,87 @@ html, body, .game-container, #gameCanvas {
 }
 
 /* Joystick and button containers - allow proper styling */
-.joystick-container, .action-buttons-container {
-  /* Allow containers to be styled properly */
-}
-
-/* Container hover effects - allow proper styling */
-.joystick-container:hover, .action-buttons-container:hover {
-  /* Allow containers to have proper hover effects */
-}
-
-/* Container active effects - allow proper styling */
-.joystick-container:active, .action-buttons-container:active {
-  /* Allow containers to have proper active effects */
-}
-
-/* Container focus effects - allow proper styling */
-.joystick-container:focus, .action-buttons-container:focus {
-  /* Allow containers to have proper focus effects */
-}
 
 /* Joystick base and knob - make them visible */
 .joystick-base {
-  background: rgba(100, 150, 255, 0.3) !important;
-  border: 2px solid rgba(150, 200, 255, 0.6) !important;
-  box-shadow: 0 0 20px rgba(100, 150, 255, 0.4) !important;
+  background: rgba(100, 100, 100, 0.8) !important;
+  border: 2px solid rgba(150, 150, 150, 0.9) !important;
+  box-shadow: none !important;
   outline: none !important;
-  backdrop-filter: blur(5px) !important;
-  -webkit-backdrop-filter: blur(5px) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 .joystick-knob {
-  background: rgba(150, 200, 255, 0.8) !important;
-  border: 2px solid rgba(200, 220, 255, 0.9) !important;
-  box-shadow: 0 0 15px rgba(150, 200, 255, 0.6) !important;
+  background: rgba(200, 200, 200, 0.9) !important;
+  border: 2px solid rgba(100, 100, 100, 1) !important;
+  box-shadow: none !important;
   outline: none !important;
 }
 
 /* Joystick hover effects */
 .joystick-base:hover {
-  background: rgba(120, 170, 255, 0.4) !important;
-  border-color: rgba(170, 220, 255, 0.8) !important;
-  box-shadow: 0 0 25px rgba(120, 170, 255, 0.5) !important;
+  background: rgba(120, 120, 120, 0.9) !important;
+  border-color: rgba(180, 180, 180, 1) !important;
+  box-shadow: none !important;
 }
 
 .joystick-knob:hover {
-  background: rgba(170, 220, 255, 0.9) !important;
-  border-color: rgba(200, 230, 255, 1) !important;
-  box-shadow: 0 0 20px rgba(170, 220, 255, 0.7) !important;
+  background: rgba(220, 220, 220, 1) !important;
+  border-color: rgba(120, 120, 120, 1) !important;
+  box-shadow: none !important;
 }
 
 /* Joystick active effects */
 .joystick-base:active {
-  background: rgba(80, 130, 255, 0.5) !important;
-  border-color: rgba(120, 180, 255, 0.9) !important;
-  box-shadow: 0 0 30px rgba(80, 130, 255, 0.6) !important;
+  background: rgba(80, 80, 80, 1) !important;
+  border-color: rgba(140, 140, 140, 1) !important;
+  box-shadow: none !important;
 }
 
 .joystick-knob:active {
-  background: rgba(120, 180, 255, 1) !important;
-  border-color: rgba(150, 200, 255, 1) !important;
-  box-shadow: 0 0 25px rgba(120, 180, 255, 0.8) !important;
+  background: rgba(180, 180, 180, 1) !important;
+  border-color: rgba(100, 100, 100, 1) !important;
+  box-shadow: none !important;
 }
 
 /* Joystick focus effects */
 .joystick-base:focus, .joystick-knob:focus {
-  outline: 2px solid rgba(200, 230, 255, 0.8) !important;
+  outline: 2px solid rgba(150, 150, 150, 0.8) !important;
   outline-offset: 2px !important;
 }
 
 /* Action buttons - make them visible */
 .action-button, .restart-button {
-  background: rgba(100, 150, 255, 0.4) !important;
-  border: 2px solid rgba(150, 200, 255, 0.7) !important;
-  box-shadow: 0 0 15px rgba(100, 150, 255, 0.3) !important;
+  background: rgba(100, 100, 100, 0.8) !important;
+  border: 2px solid rgba(150, 150, 150, 0.9) !important;
+  box-shadow: none !important;
   outline: none !important;
 }
 
 /* Action buttons hover effects */
 .action-button:hover, .restart-button:hover {
-  background: rgba(120, 170, 255, 0.6) !important;
-  border-color: rgba(170, 220, 255, 0.9) !important;
-  box-shadow: 0 0 20px rgba(120, 170, 255, 0.4) !important;
+  background: rgba(120, 120, 120, 0.9) !important;
+  border-color: rgba(180, 180, 180, 1) !important;
+  box-shadow: none !important;
   transform: scale(1.05) !important;
 }
 
 /* Action buttons active effects */
 .action-button:active, .restart-button:active {
-  background: rgba(80, 130, 255, 0.7) !important;
-  border-color: rgba(120, 180, 255, 1) !important;
-  box-shadow: 0 0 25px rgba(80, 130, 255, 0.5) !important;
+  background: rgba(80, 80, 80, 1) !important;
+  border-color: rgba(140, 140, 140, 1) !important;
+  box-shadow: none !important;
   transform: scale(0.95) !important;
 }
 
 /* Action buttons focus effects */
 .action-button:focus, .restart-button:focus {
-  outline: 2px solid rgba(200, 230, 255, 0.8) !important;
+  outline: 2px solid rgba(150, 150, 150, 0.8) !important;
   outline-offset: 2px !important;
 }
 
 /* Allow child elements to inherit proper styling */
-.joystick-container *, .action-buttons-container *, .virtual-joystick *, .action-buttons *, .action-button * {
-  /* Remove the transparent override to allow proper styling */
-}
 
 /* Remove all pseudo-elements */
 .joystick-container::before, .joystick-container::after,
@@ -188,24 +167,24 @@ html, body, .game-container, #gameCanvas {
 }
 
 /* Ultimate background fix - force dark blue background */
-html, body, .game-container, #gameCanvas, .music-button, .student-info, .joystick-container, .action-buttons-container, .virtual-joystick, .action-buttons, .action-button {
-  background: radial-gradient(circle at 20% 20%, #4a5482, #1b203a 60%) !important;
+html, body, .game-container, #gameCanvas, .music-button, .student-info {
+  background: #1b203a !important;
   background-color: #1b203a !important;
   color-scheme: dark !important;
 }
 
 /* Override any system theme for all elements */
 @media (prefers-color-scheme: light) {
-  html, body, .game-container, #gameCanvas, .music-button, .student-info, .joystick-container, .action-buttons-container, .virtual-joystick, .action-buttons, .action-button {
-    background: radial-gradient(circle at 20% 20%, #4a5482, #1b203a 60%) !important;
+  html, body, .game-container, #gameCanvas, .music-button, .student-info {
+    background: #1b203a !important;
     background-color: #1b203a !important;
     color-scheme: dark !important;
   }
 }
 
 @media (prefers-color-scheme: dark) {
-  html, body, .game-container, #gameCanvas, .music-button, .student-info, .joystick-container, .action-buttons-container, .virtual-joystick, .action-buttons, .action-button {
-    background: radial-gradient(circle at 20% 20%, #4a5482, #1b203a 60%) !important;
+  html, body, .game-container, #gameCanvas, .music-button, .student-info {
+    background: #1b203a !important;
     background-color: #1b203a !important;
     color-scheme: dark !important;
   }
@@ -217,14 +196,13 @@ html, body {
   padding: 0;
   touch-action: manipulation;
   overflow: hidden;
-  background: radial-gradient(circle at 20% 20%, #4a5482, #1b203a 60%) !important;
+  background: #1b203a !important;
   background-color: #1b203a !important;
   color-scheme: dark !important;
 }
 
 body {
-  background: radial-gradient(circle at 20% 20%, #4a5482, #1b203a 60%) !important;
-  background-attachment: fixed !important;
+  background: #1b203a !important;
   background-color: #1b203a !important;
   color-scheme: dark !important;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
@@ -432,9 +410,9 @@ body {
   position: absolute;
   top: 20px;
   right: 20px;
-  background: rgba(100, 150, 255, 0.8);
+  background: rgba(100, 100, 100, 0.8);
   color: white;
-  border: 2px solid rgba(150, 200, 255, 0.6);
+  border: 2px solid rgba(150, 150, 150, 0.9);
   border-radius: 8px;
   padding: 10px 15px;
   font-size: 14px;
@@ -448,15 +426,15 @@ body {
 }
 
 .music-button:hover {
-  background: rgba(120, 170, 255, 0.9);
-  border-color: rgba(170, 220, 255, 0.8);
+  background: rgba(120, 120, 120, 0.9);
+  border-color: rgba(180, 180, 180, 1);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: none;
 }
 
 .music-button:active {
   transform: translateY(0);
-  background: rgba(80, 130, 255, 0.9);
+  background: rgba(80, 80, 80, 0.9);
 }
 
 
@@ -491,19 +469,19 @@ body {
   opacity: 1;
 }
 
-/* Virtual Joystick - Enhanced for iPad */
+/* Virtual Joystick - Responsive for all screens */
 .virtual-joystick {
   position: relative;
-  width: 140px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
 .joystick-base {
-  width: 140px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   position: absolute;
   top: 0;
@@ -511,8 +489,8 @@ body {
 }
 
 .joystick-knob {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   position: absolute;
   top: 50%;
@@ -528,19 +506,19 @@ body {
   transform: translate(-50%, -50%) scale(1.1);
 }
 
-/* Action Buttons for iPad */
+/* Action Buttons - Responsive for all screens */
 .action-buttons {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .action-button {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   color: white;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -631,6 +609,62 @@ body {
   }
 }
 
+/* Medium screens (tablets) - Responsive controls */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .virtual-joystick {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .joystick-base {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .joystick-knob {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .action-button {
+    width: 45px;
+    height: 45px;
+    font-size: 16px;
+  }
+  
+  .action-buttons {
+    gap: 8px;
+  }
+}
+
+/* Large tablets and small laptops */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .virtual-joystick {
+    width: 110px;
+    height: 110px;
+  }
+  
+  .joystick-base {
+    width: 110px;
+    height: 110px;
+  }
+  
+  .joystick-knob {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .action-button {
+    width: 48px;
+    height: 48px;
+    font-size: 17px;
+  }
+  
+  .action-buttons {
+    gap: 9px;
+  }
+}
+
 /* iPad specific adjustments */
 @media screen and (min-width: 768px) and (max-width: 1024px) {
   .virtual-joystick {
@@ -664,7 +698,7 @@ body {
   }
 }
 
-/* Extra small screens - Force show controls */
+/* Extra small screens (phones) - Force show controls */
 @media screen and (max-width: 480px) {
   .game-container {
     padding: 15px;
@@ -697,8 +731,8 @@ body {
   }
   
   .virtual-joystick {
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
@@ -706,19 +740,19 @@ body {
   }
   
   .joystick-base {
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
   }
   
   .joystick-knob {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
   }
   
   .action-button {
-    width: 40px;
-    height: 40px;
-    font-size: 16px;
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
@@ -730,6 +764,7 @@ body {
     visibility: visible !important;
     opacity: 1 !important;
     pointer-events: auto !important;
+    gap: 6px;
   }
 }
 
@@ -800,8 +835,8 @@ body {
   }
 }
 
-/* Large browser windows */
-@media screen and (min-width: 1024px) {
+/* Large screens (desktop) - Hide touch controls */
+@media screen and (min-width: 1025px) {
   .game-container {
     padding: 25px;
     gap: 15px;
@@ -811,6 +846,32 @@ body {
     max-width: calc(85vw - 50px);
     max-height: calc(75vh - 50px);
     margin: 25px;
+  }
+  
+  /* Hide touch controls on desktop */
+  .joystick-container,
+  .action-buttons-container,
+  .virtual-joystick,
+  .action-buttons,
+  .action-button {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* Extra large screens (4K and above) */
+@media screen and (min-width: 1920px) {
+  .game-container {
+    padding: 30px;
+    gap: 20px;
+  }
+  
+  #gameCanvas {
+    max-width: calc(80vw - 60px);
+    max-height: calc(70vh - 60px);
+    margin: 30px;
   }
 }
 
@@ -828,7 +889,7 @@ body {
   font-size: 14px;
   line-height: 1.4;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border: 2px solid rgba(100, 150, 255, 0.3);
+  border: 2px solid rgba(150, 150, 150, 0.3);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
 }
@@ -916,7 +977,7 @@ body {
     margin: 15px;
   }
   
-  
+  /* Responsive controls for landscape */
   .joystick-container {
     bottom: 80px; /* Above student info */
     left: 10px;
@@ -938,6 +999,32 @@ body {
     left: 10px;
     font-size: 12px;
     padding: 8px 12px;
+  }
+  
+  /* Smaller controls in landscape */
+  .virtual-joystick {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .joystick-base {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .joystick-knob {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .action-button {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+  
+  .action-buttons {
+    gap: 5px;
   }
 }
 
