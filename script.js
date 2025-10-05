@@ -2551,7 +2551,7 @@
       
       // إعادة تعيين مؤقت البقاء والصعوبة
       outsideShip.survivalTimer = 0;
-      outsideShip.difficultyMultiplier = 1.0;
+      outsideShip.difficultyMultiplier = 2.0;
       
       // إعادة تعيين تأثيرات النيران
       outsideShip.shipFire.intensity = 0;
@@ -3661,7 +3661,7 @@
         outsideShip.rescueShip.arrived = true;
         outsideShip.rescueShip.beamActive = true;
         outsideShip.rescueShip.canBoard = true;
-        outsideShip.rescueShip.boardingMessage = 'مركبة الإنقاذ وصلت! اقترب للركوب التلقائي';
+        outsideShip.rescueShip.boardingMessage = 'مركبة الإنقاذ وصل! اقتربي للركوب التلقائي';
         outsideShip.rescueShip.boardingMessageT = 180; // 3 seconds at 60fps
         
         console.log('Rescue ship arrived and ready for boarding!', {
@@ -4600,7 +4600,6 @@
     ctx.fillStyle = 'rgba(255,255,255,0.9)';
     
     if (currentScene === 'flying') {
-      ctx.fillText('الأسهم للتحرك — اضغط F للعودة للمشهد الرئيسي — اضغط B لتفعيل الشعاع', WORLD.width / 2, 28);
       ctx.fillText('اقتربي من السفينة للدخول تلقائياً', WORLD.width / 2, 50);
     } else if (currentScene === 'main' && ship.isBeamActive && isPlayerInBeam()) {
       ctx.fillStyle = 'rgba(120, 200, 255, 1)';
@@ -5052,9 +5051,9 @@
       
       // Different text based on win status
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      let text = isTouchDevice ? 'اضغطي 🎮️ للعب' : 'اضغط للعب';
+      let text = isTouchDevice ? 'اضغطي 🎮️ للعب' : 'اضغطي للعب';
       if (quiz.hasWon && quiz.canRetryAfterWin) {
-        text = isTouchDevice ? 'اضغطي 🎮️ للعب مرة أخرى' : 'اضغط للعب مرة أخرى';
+        text = isTouchDevice ? 'اضغطي 🎮️ للعب مرة أخرى' : 'اضغطي للعب مرة أخرى';
       }
       
       const textWidth = ctx.measureText(text).width;
@@ -5121,9 +5120,9 @@
     } else {
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       if (isTouchDevice) {
-        ctx.fillText('استخدم الـ JoyStick للتحرك — اضغطي 🔧 للتفاعل مع الكمبيوتر — اضغط 🚪 للخروج من المركبة', WORLD.width / 2, 28);
+        ctx.fillText('اتجهي لليسار لكي تخرجي من المركبة', WORLD.width / 2, 28);
       } else {
-        ctx.fillText('الأسهم للتحرك بحرية — اضغطي للعب — اضغطي للخروج من المركبة', WORLD.width / 2, 28);
+        ctx.fillText('اتجهي لليسار لكي تخرجي من المركبة', WORLD.width / 2, 28);
       }
     }
     ctx.restore();
@@ -5171,9 +5170,7 @@
       ctx.textAlign = 'center';
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       if (isTouchDevice) {
-        ctx.fillText('اضغطي 🔧 للتفاعل', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
       } else {
-        ctx.fillText('اضغطي للعب', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
       }
       ctx.restore();
     }
@@ -5193,9 +5190,7 @@
     } else {
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       if (isTouchDevice) {
-        ctx.fillText('استخدم الـ JoyStick للتحرك — اضغطي 🔧 للتفاعل مع الكمبيوتر — اضغط 🚪 للخروج من المركبة', WORLD.width / 2, 28);
       } else {
-        ctx.fillText('الأسهم للتحرك بحرية — اضغطي للعب — اضغطي للخروج من المركبة', WORLD.width / 2, 28);
       }
     }
     ctx.restore();
@@ -5241,7 +5236,7 @@
       ctx.textAlign = 'center';
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       if (isTouchDevice) {
-        ctx.fillText('اضغطي 🔧 للتفاعل', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
+        ctx.fillText('اضغطي  🎮 للتفاعل', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
       } else {
         ctx.fillText('اضغطي للعب', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
       }
@@ -5263,9 +5258,7 @@
     } else {
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       if (isTouchDevice) {
-        ctx.fillText('استخدم الـ JoyStick للتحرك — اضغط 🔧 للتفاعل مع الكمبيوتر — اضغط 🚪 للخروج من المركبة', WORLD.width / 2, 28);
       } else {
-        ctx.fillText('الأسهم للتحرك بحرية — اضغط للعب — اضغط للخروج من المركبة', WORLD.width / 2, 28);
       }
     }
     ctx.restore();
