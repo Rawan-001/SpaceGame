@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover, maximum-scale=1.0, minimum-scale=1.0">
+    <title>اختبار الوضع الأفقي - رحلة رائد الفضاء</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1b203a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        
+        .test-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .test-canvas {
+            border: 2px solid #00ff00;
+            background: #000;
+            max-width: 90vw;
+            max-height: 80vh;
+            width: 800px;
+            height: 400px;
+        }
+        
+        .test-info {
+            margin-top: 20px;
+            text-align: center;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        /* Landscape mode fixes */
+        @media screen and (orientation: landscape) {
+            .test-container {
+                height: 100vh;
+                min-height: 100vh;
+                overflow: hidden;
+            }
+            
+            .test-canvas {
+                max-width: calc(95vw - 40px);
+                max-height: calc(90vh - 40px);
+                width: auto;
+                height: auto;
+                object-fit: contain;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <canvas id="testCanvas" class="test-canvas"></canvas>
+        <div class="test-info">
+            <h2>اختبار الوضع الأفقي</h2>
+            <p>قم بتدوير الجهاز إلى الوضع الأفقي لاختبار ظهور الكانفس</p>
+            <p id="orientation-info">الاتجاه الحالي: <span id="orientation"></span></p>
+            <p id="canvas-info">حجم الكانفس: <span id="canvas-size"></span></p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('testCanvas');
+        const ctx = canvas.getContext('2d');
+        const orientationSpan = document.getElementById('orientation');
+        const canvasSizeSpan = document.getElementById('canvas-size');
+        
+        // Draw test content
+        function drawTest() {
+            ctx.fillStyle = '#1b203a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff00';
+            ctx.font = '20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('اختبار الكانفس في الوضع الأفقي', canvas.width/2, canvas.height/2);
+            
+            ctx.fillText('Canvas Test', canvas.width/2, canvas.height/2 + 30);
+        }
+        
+        // Update info
+        function updateInfo() {
+            const isLandscape = window.innerWidth > window.innerHeight;
+            orientationSpan.textContent = isLandscape ? 'أفقي' : 'عمودي';
+            canvasSizeSpan.textContent = `${canvas.width}x${canvas.height}`;
+        }
+        
+        // Resize canvas
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            
+            const isLandscape = window.innerWidth > window.innerHeight;
+            
+            if (isLandscape) {
+                canvas.style.maxWidth = 'calc(95vw - 40px)';
+                canvas.style.maxHeight = 'calc(90vh - 40px)';
+            } else {
+                canvas.style.maxWidth = '90vw';
+                canvas.style.maxHeight = '80vh';
+            }
+            
+            updateInfo();
+            drawTest();
+        }
+        
+        // Initial setup
+        resizeCanvas();
+        
+        // Listen for orientation changes
+        window.addEventListener('orientationchange', () => {
+            setTimeout(resizeCanvas, 300);
+        });
+        
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html>

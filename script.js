@@ -943,7 +943,7 @@
   // Rescue ship messages
   let rescueMessage = {
     visible: false,
-    text: "انتظر، ستأتي مركبة إنقاذ",
+    text: "انتظري ستأتي مركبة إنقاذ",
     timer: 0,
     duration: 5000
   };
@@ -1046,7 +1046,7 @@
     shipX: 40,
     // Survival timer system
     survivalTimer: 0,
-    maxSurvivalTime: 2400, // 40 seconds (2400 frames at 60fps) - وقت أقصر وأصعب
+    maxSurvivalTime: 3600, // 60 seconds (3600 frames at 60fps) - دقيقة كاملة
     difficultyMultiplier: 1.0,
     shipY: 60,
     // Ship arrival sequence
@@ -4601,13 +4601,13 @@
     
     if (currentScene === 'flying') {
       ctx.fillText('الأسهم للتحرك — اضغط F للعودة للمشهد الرئيسي — اضغط B لتفعيل الشعاع', WORLD.width / 2, 28);
-      ctx.fillText('اقترب من السفينة للدخول تلقائياً', WORLD.width / 2, 50);
+      ctx.fillText('اقتربي من السفينة للدخول تلقائياً', WORLD.width / 2, 50);
     } else if (currentScene === 'main' && ship.isBeamActive && isPlayerInBeam()) {
       ctx.fillStyle = 'rgba(120, 200, 255, 1)';
       ctx.font = 'bold 20px Segoe UI, Roboto, Arial';
       ctx.fillText('تم التقاطك! جاري الدخول إلى المركبة...', WORLD.width / 2, 28);
     } else {
-      ctx.fillText('اقترب من السفينة للدخول تلقائياً', WORLD.width / 2, 50);
+      ctx.fillText('اقتربي من السفينة للدخول تلقائياً', WORLD.width / 2, 50);
     }
     
     ctx.restore();
@@ -5042,6 +5042,8 @@
     // Draw left gate
     drawGate(outsideShip.gateX, outsideShip.gateY, outsideShip.gateWidth, outsideShip.gateHeight);
 
+    // Exit arrow removed
+
     // Draw interaction prompt
     if (insideShip.showInteraction) {
       ctx.save();
@@ -5050,9 +5052,9 @@
       
       // Different text based on win status
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      let text = isTouchDevice ? 'اضغط 🎮️ للعب' : 'اضغط للعب';
+      let text = isTouchDevice ? 'اضغطي 🎮️ للعب' : 'اضغط للعب';
       if (quiz.hasWon && quiz.canRetryAfterWin) {
-        text = isTouchDevice ? 'اضغط 🎮️ للعب مرة أخرى' : 'اضغط للعب مرة أخرى';
+        text = isTouchDevice ? 'اضغطي 🎮️ للعب مرة أخرى' : 'اضغط للعب مرة أخرى';
       }
       
       const textWidth = ctx.measureText(text).width;
@@ -5095,12 +5097,15 @@
       ctx.restore();
     }
     
-    // Draw Exit Ship button if at far left
+    // Draw Exit Ship button - positioned slightly to the right and up
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const exitText = isTouchDevice ? '  اضغط 🚪 للخروج' : '  اضغط للخروج';
+    const exitText = isTouchDevice ? '  اضغطي 🚪 للخروج' : '  اضغطي للخروج';
     if (exitButton.visible) {
-      console.log('Drawing exit button at:', exitButton.x, exitButton.y, 'size:', exitButton.w, exitButton.h);
-      drawClickableButton(exitButton.x, exitButton.y, exitButton.w, exitButton.h, exitText, 'exit');
+      // Adjust position: move right by 50px and up by 20px from original position
+      const adjustedX = exitButton.x + 100;
+      const adjustedY = exitButton.y - 100;
+      console.log('Drawing exit button at:', adjustedX, adjustedY, 'size:', exitButton.w, exitButton.h);
+      drawClickableButton(adjustedX, adjustedY, exitButton.w, exitButton.h, exitText, 'exit');
     }
 
     // Draw canvas controls for landscape mode
@@ -5112,13 +5117,13 @@
     ctx.textAlign = 'center';
     ctx.fillStyle = 'rgba(255,255,255,0.9)';
     if (quiz.completed) {
-      ctx.fillText('🎉 مبروك! لقد أكملت جميع الأسئلة! 🎉', WORLD.width / 2, 28);
+      ctx.fillText('🎉 مبروك! لقد أكملتِ جميع الأسئلة! 🎉', WORLD.width / 2, 28);
     } else {
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       if (isTouchDevice) {
-        ctx.fillText('استخدم الـ JoyStick للتحرك — اضغط 🔧 للتفاعل مع الكمبيوتر — اضغط 🚪 للخروج من المركبة', WORLD.width / 2, 28);
+        ctx.fillText('استخدم الـ JoyStick للتحرك — اضغطي 🔧 للتفاعل مع الكمبيوتر — اضغط 🚪 للخروج من المركبة', WORLD.width / 2, 28);
       } else {
-        ctx.fillText('الأسهم للتحرك بحرية — اضغط للعب — اضغط للخروج من المركبة', WORLD.width / 2, 28);
+        ctx.fillText('الأسهم للتحرك بحرية — اضغطي للعب — اضغطي للخروج من المركبة', WORLD.width / 2, 28);
       }
     }
     ctx.restore();
@@ -5166,9 +5171,9 @@
       ctx.textAlign = 'center';
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       if (isTouchDevice) {
-        ctx.fillText('اضغط 🔧 للتفاعل', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
+        ctx.fillText('اضغطي 🔧 للتفاعل', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
       } else {
-        ctx.fillText('اضغط للعب', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
+        ctx.fillText('اضغطي للعب', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
       }
       ctx.restore();
     }
@@ -5188,9 +5193,9 @@
     } else {
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       if (isTouchDevice) {
-        ctx.fillText('استخدم الـ JoyStick للتحرك — اضغط 🔧 للتفاعل مع الكمبيوتر — اضغط 🚪 للخروج من المركبة', WORLD.width / 2, 28);
+        ctx.fillText('استخدم الـ JoyStick للتحرك — اضغطي 🔧 للتفاعل مع الكمبيوتر — اضغط 🚪 للخروج من المركبة', WORLD.width / 2, 28);
       } else {
-        ctx.fillText('الأسهم للتحرك بحرية — اضغط للعب — اضغط للخروج من المركبة', WORLD.width / 2, 28);
+        ctx.fillText('الأسهم للتحرك بحرية — اضغطي للعب — اضغطي للخروج من المركبة', WORLD.width / 2, 28);
       }
     }
     ctx.restore();
@@ -5236,9 +5241,9 @@
       ctx.textAlign = 'center';
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       if (isTouchDevice) {
-        ctx.fillText('اضغط 🔧 للتفاعل', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
+        ctx.fillText('اضغطي 🔧 للتفاعل', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
       } else {
-        ctx.fillText('اضغط للعب', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
+        ctx.fillText('اضغطي للعب', insideShip.computerX + insideShip.backgroundX + insideShip.computerWidth / 2, insideShip.computerY + insideShip.backgroundY + insideShip.computerFloatOffset - 10);
       }
       ctx.restore();
     }
@@ -5478,7 +5483,7 @@
     
     ctx.font = '18px Segoe UI, Roboto, Arial';
     ctx.fillStyle = '#feca57';
-    ctx.fillText('أنتِ رائد فضاء ذكية!', WORLD.width / 2, WORLD.height / 2 + 40);
+    ctx.fillText('أنتِ رائدة فضاء ذكية!', WORLD.width / 2, WORLD.height / 2 + 40);
     ctx.restore();
     
     ctx.restore();
@@ -5988,6 +5993,10 @@
     ctx.restore();
   }
 
+  function drawExitArrow() {
+    // This function is now empty - arrow removed
+  }
+
   function drawButton(x, y, w, h, label) {
     ctx.save();
     ctx.fillStyle = 'rgba(0, 0, 0, 0.82)';
@@ -6386,4 +6395,3 @@
 setTimeout(() => {
   forceShowTouchControls();
 }, 500);
-

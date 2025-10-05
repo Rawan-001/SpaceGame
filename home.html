@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover, maximum-scale=1.0, minimum-scale=1.0, shrink-to-fit=no">
+    <title>رحلة رائد الفضاء - الصفحة الرئيسية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1b203a 0%, #2c3e50 50%, #1b203a 100%);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* خلفية النجوم المتحركة */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00d4ff, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        /* رائد الفضاء والمركبة - استخدام الصور الفعلية */
+        .space-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .astronaut {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-image: url('images/flyingAstronuat.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            animation: float 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
+        }
+
+        .astronaut-1 {
+            top: 20%;
+            left: 10%;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .spaceship {
+            position: absolute;
+            width: 100px;
+            height: 60px;
+            background-image: url('images/Ship3.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            animation: fly 6s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(74, 144, 226, 0.6));
+        }
+
+        .spaceship-1 {
+            top: 15%;
+            right: 15%;
+            animation: fly 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) translateX(0px) rotate(0deg); 
+                filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
+            }
+            25% { 
+                transform: translateY(-15px) translateX(10px) rotate(3deg); 
+                filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
+            }
+            50% { 
+                transform: translateY(-25px) translateX(0px) rotate(0deg); 
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.8));
+            }
+            75% { 
+                transform: translateY(-10px) translateX(-5px) rotate(-2deg); 
+                filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.5));
+            }
+        }
+
+        @keyframes fly {
+            0%, 100% { 
+                transform: translateX(0px) translateY(0px) rotate(0deg) scale(1); 
+                filter: drop-shadow(0 0 20px rgba(74, 144, 226, 0.6));
+            }
+            25% { 
+                transform: translateX(15px) translateY(-10px) rotate(3deg) scale(1.05); 
+                filter: drop-shadow(0 0 25px rgba(74, 144, 226, 0.8));
+            }
+            50% { 
+                transform: translateX(0px) translateY(-20px) rotate(0deg) scale(1.1); 
+                filter: drop-shadow(0 0 30px rgba(74, 144, 226, 1));
+            }
+            75% { 
+                transform: translateX(-10px) translateY(-5px) rotate(-2deg) scale(1.05); 
+                filter: drop-shadow(0 0 22px rgba(74, 144, 226, 0.7));
+            }
+        }
+
+        .student-info {
+            position: relative;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 1rem;
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 100;
+        }
+
+        .student-info h3 {
+            margin: 0 0 8px 0;
+            color: #00d4ff;
+            font-size: 1.1rem;
+        }
+
+        .student-info p {
+            margin: 3px 0;
+            color: #b0c4de;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(0, 212, 255, 0.5); }
+            to { text-shadow: 0 0 40px rgba(0, 212, 255, 0.8), 0 0 60px rgba(255, 107, 107, 0.3); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #b0c4de;
+            opacity: 0.9;
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .menu-button {
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 107, 0.2));
+            border: 2px solid rgba(0, 212, 255, 0.5);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 250px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .menu-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+            border-color: rgba(0, 212, 255, 0.8);
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 107, 0.3));
+        }
+
+        .menu-button:active {
+            transform: translateY(-2px);
+        }
+
+        .menu-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .menu-button:hover::before {
+            left: 100%;
+        }
+
+        .student-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .student-info p {
+            margin: 2px 0;
+        }
+
+        /* معلومات الطالبة في أقصى أسفل الصفحة */
+        .student-info-bottom {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 20px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .student-info-bottom p {
+            margin: 2px 0;
+            color: #b0c4de;
+        }
+
+        /* زر الموسيقى */
+        .music-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: transparent;
+            color: transparent;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: none;
+            backdrop-filter: none;
+            opacity: 0;
+        }
+
+        .music-button:hover {
+            background: transparent;
+            border: none;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .music-button:active {
+            transform: none;
+            background: transparent;
+        }
+
+        /* نافذة التعليمات */
+        .instructions-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .instructions-content {
+            background: linear-gradient(135deg, #1b203a 0%, #2c3e50 50%, #1b203a 100%);
+            margin: 5% auto;
+            padding: 30px;
+            border: 2px solid rgba(0, 212, 255, 0.5);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .instructions-content h2 {
+            color: #00d4ff;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .instructions-content h3 {
+            color: #4ecdc4;
+            margin: 15px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .instructions-content p, .instructions-content li {
+            color: #b0c4de;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        .instructions-content ul {
+            margin: 10px 0;
+            padding-right: 20px;
+        }
+
+        .close-instructions {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 107, 107, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-instructions:hover {
+            background: rgba(255, 107, 107, 1);
+            transform: scale(1.1);
+        }
+
+        /* تأثيرات إضافية للشاشات الصغيرة */
+        @media screen and (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .menu-button {
+                font-size: 1.1rem;
+                padding: 12px 30px;
+                min-width: 200px;
+            }
+            
+            .student-info {
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .menu-button {
+                font-size: 1rem;
+                padding: 10px 25px;
+                min-width: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- خلفية النجوم -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- رائد الفضاء والمركبة -->
+    <div class="space-elements">
+        <div class="astronaut astronaut-1"></div>
+        <div class="spaceship spaceship-1"></div>
+    </div>
+    
+    <div class="container">
+        <h1 class="logo">رحلة رائد الفضاء</h1>
+        <p class="subtitle">مغامرة فضائية مثيرة في أعماق الكون</p>
+        
+        <div class="menu-buttons">
+            <button class="menu-button" id="startGameBtn">
+                بدء اللعبة
+            </button>
+            <button class="menu-button" id="instructionsBtn">
+                التعليمات
+            </button>
+        </div>
+        
+        <!-- زر الموسيقى -->
+        <button id="musicToggle" class="music-button" onclick="toggleMusic()">🎵 تشغيل الموسيقى</button>
+    </div>
+
+    <!-- معلومات الطالبة - في أقصى أسفل الصفحة -->
+    <div class="student-info-bottom">
+        <p>الأسم: رودينا علي سعيد الغامدي</p>
+        <p>المدرسة: 102 الإبتدائية</p>
+    </div>
+
+    <!-- نافذة التعليمات -->
+    <div id="instructionsModal" class="instructions-modal">
+        <div class="instructions-content">
+            <button class="close-instructions" onclick="closeInstructions()">×</button>
+            <h2>تعليمات اللعبة</h2>
+            
+            <h3>الهدف</h3>
+            <p>تحكمي برائدة الفضاء وتجنبي العقبات في رحلتك الفضائية</p>
+            
+            <h3>التحكم</h3>
+            <ul>
+                <li><strong>أجهزة الكمبيوتر:</strong> استخدمي الأسهم (↑↓←→) للتحرك</li>
+                <li><strong>الهواتف والأجهزة اللوحية:</strong> استخدمي عصا التحكم الجوي للتحرك</li>
+                <li><strong>التفاعل:</strong> اضغطي على زر التفاعل للتفاعل مع الكمبيوتر</li>
+                <li><strong>الخروج:</strong> اضغطي على زر الخروج للخروج من المركبة</li>
+            </ul>
+            
+            <h3>المراحل</h3>
+            <ul>
+                <li><strong>المرحلة الأولى:</strong> تجنبي العقبات في الفضاء الخارجي</li>
+                <li><strong>المرحلة الثانية:</strong> ادخلي المركبة وتفاعلي مع الكمبيوتر</li>
+                <li><strong>المرحلة الثالثة:</strong> أجب على الأسئلة لإنقاذ نفسك</li>
+                <li><strong>المرحلة الأخيرة:</strong> صمدي لمدة دقيقة كاملة!</li>
+            </ul>
+            
+
+            
+
+            
+            <p style="text-align: center; margin-top: 20px; color: #00d4ff; font-weight: bold;">
+                حظاً سعيداً في رحلتك الفضائية!
+            </p>
+        </div>
+    </div>
+
+    <!-- عنصر الموسيقى -->
+    <audio id="backgroundMusic" loop autoplay>
+        <source src="images/Samud.m4a" type="audio/mp4">
+        <source src="images/Samud.m4a" type="audio/mpeg">
+        متصفحك لا يدعم تشغيل الموسيقى.
+    </audio>
+
+    <script>
+        // إنشاء النجوم المتحركة
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numStars = 100;
+            
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // مواضع عشوائية
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                
+                // أحجام مختلفة
+                const size = Math.random() * 3 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                
+                // سرعات مختلفة للوميض
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // بدء اللعبة
+        function startGame() {
+            console.log('بدء اللعبة...');
+            window.location.href = 'game.html';
+        }
+
+        // عرض التعليمات
+        function showInstructions() {
+            const instructionsModal = document.getElementById('instructionsModal');
+            if (instructionsModal) {
+                instructionsModal.style.display = 'block';
+            }
+        }
+
+        // إغلاق نافذة التعليمات
+        function closeInstructions() {
+            const instructionsModal = document.getElementById('instructionsModal');
+            if (instructionsModal) {
+                instructionsModal.style.display = 'none';
+            }
+        }
+
+        // متغيرات الموسيقى
+        let musicPlaying = false;
+        let backgroundMusic = null;
+
+        // تشغيل الموسيقى تلقائياً
+        function autoPlayMusic() {
+            if (!backgroundMusic) {
+                backgroundMusic = document.getElementById('backgroundMusic');
+            }
+            
+            // محاولة تشغيل الموسيقى تلقائياً
+            try {
+                backgroundMusic.volume = 0.3; // تقليل الصوت أكثر
+                backgroundMusic.muted = false;
+                
+                // محاولة التشغيل مع معالجة الأخطاء
+                const playPromise = backgroundMusic.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        musicPlaying = true;
+                        console.log('تم تشغيل موسيقى الصمود تلقائياً');
+                        // إخفاء زر الموسيقى عند التشغيل التلقائي
+                        const musicButton = document.getElementById('musicToggle');
+                        if (musicButton) {
+                            musicButton.style.display = 'none';
+                        }
+                    }).catch(error => {
+                        console.log('لا يمكن تشغيل الموسيقى تلقائياً:', error);
+                        // إظهار زر الموسيقى إذا لم يتمكن من التشغيل التلقائي
+                        const musicButton = document.getElementById('musicToggle');
+                        if (musicButton) {
+                            musicButton.style.display = 'block';
+                        }
+                    });
+                }
+            } catch (error) {
+                console.log('خطأ في تشغيل الموسيقى:', error);
+                const musicButton = document.getElementById('musicToggle');
+                if (musicButton) {
+                    musicButton.style.display = 'block';
+                }
+            }
+        }
+
+        // تشغيل الموسيقى عند النقر في أي مكان
+        function enableMusicOnInteraction() {
+            if (!musicPlaying && backgroundMusic) {
+                autoPlayMusic();
+            }
+        }
+
+        // تشغيل الموسيقى عند النقر على أي زر
+        function enableMusicOnButtonClick() {
+            if (!musicPlaying && backgroundMusic) {
+                console.log('محاولة تشغيل الموسيقى عند النقر على زر');
+                autoPlayMusic();
+            }
+        }
+
+        // تشغيل/إيقاف الموسيقى (للاحتياط)
+        function toggleMusic() {
+            if (!backgroundMusic) {
+                backgroundMusic = document.getElementById('backgroundMusic');
+            }
+            
+            const musicButton = document.getElementById('musicToggle');
+            
+            if (musicPlaying) {
+                backgroundMusic.pause();
+                musicButton.textContent = '🎵 تشغيل الموسيقى';
+                musicPlaying = false;
+                console.log('تم إيقاف الموسيقى');
+            } else {
+                backgroundMusic.play().then(() => {
+                    musicButton.textContent = '🔇 إيقاف الموسيقى';
+                    musicPlaying = true;
+                    console.log('تم تشغيل الموسيقى');
+                }).catch(error => {
+                    console.error('خطأ في تشغيل الموسيقى:', error);
+                    alert('لا يمكن تشغيل الموسيقى. تأكد من أن المتصفح يدعم تشغيل الصوت.');
+                });
+            }
+        }
+
+        // إعداد event listeners للأزرار
+        function setupEventListeners() {
+            const startBtn = document.getElementById('startGameBtn');
+            const instructionsBtn = document.getElementById('instructionsBtn');
+            
+            if (startBtn) {
+                startBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('تم الضغط على زر بدء اللعبة');
+                    enableMusicOnButtonClick(); // محاولة تشغيل الموسيقى
+                    startGame();
+                });
+                console.log('تم إعداد event listener لزر بدء اللعبة');
+            } else {
+                console.error('لم يتم العثور على زر بدء اللعبة');
+            }
+            
+            if (instructionsBtn) {
+                instructionsBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('تم الضغط على زر التعليمات');
+                    enableMusicOnButtonClick(); // محاولة تشغيل الموسيقى
+                    showInstructions();
+                });
+                console.log('تم إعداد event listener لزر التعليمات');
+            } else {
+                console.error('لم يتم العثور على زر التعليمات');
+            }
+        }
+
+        // تشغيل الموسيقى فور تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            autoPlayMusic();
+        });
+
+        // تشغيل النجوم وإعداد الأزرار عند تحميل الصفحة
+        window.addEventListener('load', function() {
+            createStars();
+            setupEventListeners();
+            autoPlayMusic(); // تشغيل الموسيقى تلقائياً
+        });
+
+        // تشغيل الموسيقى عند التفاعل الأول
+        document.addEventListener('click', enableMusicOnInteraction, { once: true });
+        document.addEventListener('touchstart', enableMusicOnInteraction, { once: true });
+        document.addEventListener('keydown', enableMusicOnInteraction, { once: true });
+        document.addEventListener('mousemove', enableMusicOnInteraction, { once: true });
+        document.addEventListener('scroll', enableMusicOnInteraction, { once: true });
+        
+        // محاولة تشغيل الموسيقى عند تحميل الصفحة مع تأخير
+        setTimeout(() => {
+            autoPlayMusic();
+        }, 1000);
+        
+        // محاولة أخرى بعد 3 ثوان
+        setTimeout(() => {
+            if (!musicPlaying) {
+                autoPlayMusic();
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

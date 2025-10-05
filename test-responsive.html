@@ -2,120 +2,203 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover, maximum-scale=1.0, minimum-scale=1.0">
-    <title>اختبار اللعبة المتجاوبة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover, maximum-scale=1.0, minimum-scale=1.0, shrink-to-fit=no">
+    <title>اختبار التجاوب - رحلة رائد الفضاء</title>
     <style>
-        body {
+        * {
             margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            background: #f0f0f0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .test-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .test-button {
-            background: #007bff;
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1b203a 0%, #2c3e50 50%, #1b203a 100%);
             color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .test-button:hover {
-            background: #0056b3;
-        }
-        .info {
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 10px 0;
-        }
-        .game-frame {
-            width: 100%;
-            height: 600px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
+            height: 100vh;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+
+        .test-container {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            max-width: 800px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .test-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00d4ff, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .test-info {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #b0c4de;
+        }
+
+        .test-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .test-button {
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 107, 0.2));
+            border: 2px solid rgba(0, 212, 255, 0.5);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 250px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .test-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+            border-color: rgba(0, 212, 255, 0.8);
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 107, 0.3));
+        }
+
+        .screen-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .screen-info h3 {
+            margin: 0 0 5px 0;
+            color: #00d4ff;
+        }
+
+        .screen-info p {
+            margin: 2px 0;
+            color: #b0c4de;
+        }
+
+        @media screen and (max-width: 768px) {
+            .test-title {
+                font-size: 2rem;
+            }
+            
+            .test-info {
+                font-size: 1rem;
+            }
+            
+            .test-button {
+                font-size: 1.1rem;
+                padding: 12px 30px;
+                min-width: 200px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .test-title {
+                font-size: 1.5rem;
+            }
+            
+            .test-button {
+                font-size: 1rem;
+                padding: 10px 25px;
+                min-width: 180px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="screen-info">
+        <h3>معلومات الشاشة</h3>
+        <p id="screenSize">حجم الشاشة: <span id="screenWidth"></span> x <span id="screenHeight"></span></p>
+        <p id="deviceType">نوع الجهاز: <span id="deviceInfo"></span></p>
+        <p id="orientation">الاتجاه: <span id="orientationInfo"></span></p>
+    </div>
+
     <div class="test-container">
-        <h1>🧪 اختبار اللعبة المتجاوبة</h1>
+        <h1 class="test-title">اختبار التجاوب</h1>
+        <p class="test-info">اختبار واجهة اللعبة على مختلف الأحجام</p>
         
-        <div class="info">
-            <h3>📱 اختبارات يجب تجربتها:</h3>
-            <ul>
-                <li>تغيير حجم النافذة (سحب زوايا النافذة)</li>
-                <li>تغيير اتجاه الشاشة (إذا كان على جهاز لوحي)</li>
-                <li>اختبار على أحجام شاشات مختلفة</li>
-                <li>اختبار اللمس والتحكم</li>
-            </ul>
-        </div>
-        
-        <div>
-            <button class="test-button" onclick="testSmallWindow()">اختبار نافذة صغيرة</button>
-            <button class="test-button" onclick="testMediumWindow()">اختبار نافذة متوسطة</button>
-            <button class="test-button" onclick="testLargeWindow()">اختبار نافذة كبيرة</button>
-            <button class="test-button" onclick="testFullscreen()">اختبار ملء الشاشة</button>
-            <button class="test-button" onclick="logCanvasState()">عرض حالة Canvas</button>
-        </div>
-        
-        <div class="game-frame">
-            <iframe src="index.html" id="gameFrame"></iframe>
-        </div>
-        
-        <div class="info">
-            <h3>🔧 معلومات التصحيح:</h3>
-            <p>افتح Developer Tools (F12) لرؤية رسائل التصحيح</p>
-            <p>استخدم <code>logCanvasState()</code> في Console لرؤية حالة Canvas</p>
+        <div class="test-buttons">
+            <a href="home.html" class="test-button">العودة للصفحة الرئيسية</a>
+            <a href="game.html" class="test-button">اختبار اللعبة</a>
+            <button class="test-button" onclick="testFullscreen()">اختبار الشاشة الكاملة</button>
+            <button class="test-button" onclick="testTouchControls()">اختبار أزرار اللمس</button>
         </div>
     </div>
 
     <script>
-        function testSmallWindow() {
-            window.resizeTo(400, 300);
+        // عرض معلومات الشاشة
+        function updateScreenInfo() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const orientation = width > height ? 'أفقي' : 'عمودي';
+            
+            let deviceType = 'سطح المكتب';
+            if (width <= 480) {
+                deviceType = 'هاتف ذكي';
+            } else if (width <= 768) {
+                deviceType = 'تابلت صغير';
+            } else if (width <= 1024) {
+                deviceType = 'تابلت';
+            } else if (width <= 1366) {
+                deviceType = 'لابتوب';
+            } else {
+                deviceType = 'شاشة كبيرة';
+            }
+            
+            document.getElementById('screenWidth').textContent = width;
+            document.getElementById('screenHeight').textContent = height;
+            document.getElementById('deviceInfo').textContent = deviceType;
+            document.getElementById('orientationInfo').textContent = orientation;
         }
-        
-        function testMediumWindow() {
-            window.resizeTo(800, 600);
-        }
-        
-        function testLargeWindow() {
-            window.resizeTo(1200, 800);
-        }
-        
+
+        // اختبار الشاشة الكاملة
         function testFullscreen() {
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
             }
         }
-        
-        // Log window resize events
-        window.addEventListener('resize', function() {
-            console.log('Window resized to:', window.innerWidth, 'x', window.innerHeight);
-        });
-        
-        // Log orientation change
+
+        // اختبار أزرار اللمس
+        function testTouchControls() {
+            alert('أزرار اللمس ستظهر في الشاشات الصغيرة (أقل من 1025px)');
+        }
+
+        // تحديث معلومات الشاشة عند تغيير الحجم
+        window.addEventListener('resize', updateScreenInfo);
         window.addEventListener('orientationchange', function() {
-            console.log('Orientation changed');
-            setTimeout(() => {
-                console.log('New orientation size:', window.innerWidth, 'x', window.innerHeight);
-            }, 100);
+            setTimeout(updateScreenInfo, 100);
         });
+
+        // تحديث معلومات الشاشة عند التحميل
+        window.addEventListener('load', updateScreenInfo);
     </script>
 </body>
 </html>
-

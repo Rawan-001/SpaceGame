@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover, maximum-scale=1.0, minimum-scale=1.0">
+    <title>اختبار ملء الشاشة بالكامل - رحلة رائد الفضاء</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #1b203a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        
+        .test-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100vw;
+            height: 100vh;
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+        
+        .test-canvas {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            background: #000;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        .test-info {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 1000;
+            font-size: 14px;
+        }
+        
+        .test-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 1000;
+        }
+        
+        .test-button {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+        
+        /* Force full screen on all devices */
+        @media screen and (max-width: 320px) {
+            .test-container {
+                width: 100vw !important;
+                height: 100vh !important;
+            }
+            
+            .test-canvas {
+                width: 100vw !important;
+                height: 100vh !important;
+            }
+        }
+        
+        @media screen and (orientation: landscape) {
+            .test-container {
+                width: 100vw !important;
+                height: 100vh !important;
+            }
+            
+            .test-canvas {
+                width: 100vw !important;
+                height: 100vh !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <canvas id="testCanvas" class="test-canvas"></canvas>
+        <div class="test-info">
+            <h3>اختبار ملء الشاشة بالكامل</h3>
+            <p>حجم الشاشة: <span id="screen-size"></span></p>
+            <p>حجم الكانفس: <span id="canvas-size"></span></p>
+            <p>الوضع: <span id="orientation"></span></p>
+            <p>النسبة: <span id="ratio"></span></p>
+        </div>
+        <div class="test-controls">
+            <button class="test-button" onclick="toggleFullscreen()">ملء الشاشة</button>
+            <button class="test-button" onclick="resizeCanvas()">إعادة الحساب</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('testCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Update info
+        function updateInfo() {
+            document.getElementById('screen-size').textContent = `${window.innerWidth}x${window.innerHeight}`;
+            document.getElementById('canvas-size').textContent = `${canvas.width}x${canvas.height}`;
+            document.getElementById('orientation').textContent = window.innerWidth > window.innerHeight ? 'أفقي' : 'عمودي';
+            document.getElementById('ratio').textContent = `${(window.innerWidth / window.innerHeight).toFixed(2)}`;
+        }
+        
+        // Draw test content
+        function drawTest() {
+            ctx.fillStyle = '#1b203a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw grid
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 2;
+            
+            // Vertical lines
+            for (let x = 0; x < canvas.width; x += 50) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            // Horizontal lines
+            for (let y = 0; y < canvas.height; y += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Center text
+            ctx.fillStyle = '#00ff00';
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('ملء الشاشة بالكامل', canvas.width/2, canvas.height/2);
+            ctx.fillText(`${canvas.width}x${canvas.height}`, canvas.width/2, canvas.height/2 + 30);
+        }
+        
+        // Resize canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            canvas.style.width = '100vw';
+            canvas.style.height = '100vh';
+            updateInfo();
+            drawTest();
+        }
+        
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        // Initial setup
+        resizeCanvas();
+        
+        // Listen for resize
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(resizeCanvas, 300);
+        });
+        
+        // Listen for fullscreen changes
+        document.addEventListener('fullscreenchange', () => {
+            setTimeout(resizeCanvas, 100);
+        });
+    </script>
+</body>
+</html>

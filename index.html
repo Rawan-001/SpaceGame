@@ -2,49 +2,129 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover, maximum-scale=1.0, minimum-scale=1.0, shrink-to-fit=no">
     <title>رحلة رائد الفضاء</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1b203a;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .loading {
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 212, 255, 0.3);
+            border-top: 3px solid #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <div class="game-container">
-        <canvas id="gameCanvas" aria-label="فضاء اللعبة"></canvas>
-        
-        <!-- Music Control Button -->
-        <button id="musicToggle" class="music-button" onclick="toggleMusic()">🎵 تشغيل الموسيقى</button>
-        
-        
-        <!-- Touch Controls for Mobile/Tablet -->
-        <!-- Virtual Joystick for movement (Left side) -->
-        <div class="joystick-container">
-            <div class="virtual-joystick" id="virtualJoystick">
-                <div class="joystick-base"></div>
-                <div class="joystick-knob" id="joystickKnob"></div>
-            </div>
-        </div>
-        
-        <!-- Action Buttons (Right side) -->
-        <div class="action-buttons-container">
-            <div class="action-buttons">
-                <button class="action-button" id="interactButton" title="لعب">🎮</button>
-                <button class="action-button" id="exitButton" title="خروج">🚪</button>
-                <button class="action-button restart-button" id="restartButton" title="إعادة اللعبة">🔄</button>
-            </div>
-        </div>
-        
-        <!-- Student Information -->
-        <div class="student-info">
-            <p>عمل الطالبة : رودينا علي الغامدي</p>
-            <p>المدرسة : 102 الإبتدائية</p>
-        </div>
+    <div class="loading">
+        <div class="spinner"></div>
+        <h2>🚀 جاري التحميل...</h2>
+        <p>رحلة رائد الفضاء</p>
     </div>
 
-    <script src="script.js"></script>
-    <noscript>الرجاء تفعيل JavaScript لتجربة اللعبة.</noscript>
-    <!--
-        Astronaut's Journey - Level 1
-        Use Arrow Keys to move. Avoid obstacles and reach the ship!
-    -->
-    
+    <!-- عنصر الموسيقى -->
+    <audio id="backgroundMusic" loop autoplay>
+        <source src="images/Samud.m4a" type="audio/mp4">
+        <source src="images/Samud.m4a" type="audio/mpeg">
+        متصفحك لا يدعم تشغيل الموسيقى.
+    </audio>
+
+    <script>
+        // متغيرات الموسيقى
+        let musicPlaying = false;
+        let backgroundMusic = null;
+
+        // تشغيل الموسيقى تلقائياً
+        function autoPlayMusic() {
+            if (!backgroundMusic) {
+                backgroundMusic = document.getElementById('backgroundMusic');
+            }
+            
+            // محاولة تشغيل الموسيقى تلقائياً
+            try {
+                backgroundMusic.volume = 0.3; // تقليل الصوت أكثر
+                backgroundMusic.muted = false;
+                
+                // محاولة التشغيل مع معالجة الأخطاء
+                const playPromise = backgroundMusic.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        musicPlaying = true;
+                        console.log('تم تشغيل موسيقى الصمود تلقائياً');
+                    }).catch(error => {
+                        console.log('لا يمكن تشغيل الموسيقى تلقائياً:', error);
+                    });
+                }
+            } catch (error) {
+                console.log('خطأ في تشغيل الموسيقى:', error);
+            }
+        }
+
+        // تشغيل الموسيقى عند التفاعل الأول
+        function enableMusicOnInteraction() {
+            if (!musicPlaying && backgroundMusic) {
+                autoPlayMusic();
+            }
+        }
+
+        // تشغيل الموسيقى فور تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            autoPlayMusic();
+        });
+
+        // تشغيل الموسيقى عند التفاعل الأول
+        document.addEventListener('click', enableMusicOnInteraction, { once: true });
+        document.addEventListener('touchstart', enableMusicOnInteraction, { once: true });
+        document.addEventListener('keydown', enableMusicOnInteraction, { once: true });
+        document.addEventListener('mousemove', enableMusicOnInteraction, { once: true });
+        document.addEventListener('scroll', enableMusicOnInteraction, { once: true });
+        
+        // محاولة تشغيل الموسيقى عند تحميل الصفحة مع تأخير
+        setTimeout(() => {
+            autoPlayMusic();
+        }, 500);
+        
+        // محاولة أخرى بعد ثانيتين
+        setTimeout(() => {
+            if (!musicPlaying) {
+                autoPlayMusic();
+            }
+        }, 2000);
+
+        // توجيه تلقائي إلى الصفحة الرئيسية
+        setTimeout(() => {
+            window.location.href = 'home.html';
+        }, 1500);
+    </script>
 </body>
 </html>
