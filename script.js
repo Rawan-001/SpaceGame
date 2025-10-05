@@ -31,6 +31,76 @@
   let joystickCenter = { x: 0, y: 0 };
   let joystickRadius = 50;
   
+  // Function to force show touch controls
+  function forceShowTouchControls() {
+    console.log('Forcing touch controls visibility...');
+    
+    const joystickContainer = document.querySelector('.joystick-container');
+    const actionButtonsContainer = document.querySelector('.action-buttons-container');
+    const joystick = document.getElementById('virtualJoystick');
+    const knob = document.getElementById('joystickKnob');
+    const actionButtons = document.querySelector('.action-buttons');
+    
+    // Check if device is Huawei tablet
+    const isHuawei = /huawei/i.test(navigator.userAgent) || /honor/i.test(navigator.userAgent);
+    const isLandscape = window.innerWidth > window.innerHeight;
+    
+    if (joystickContainer) {
+      joystickContainer.style.display = 'block';
+      joystickContainer.style.opacity = '1';
+      joystickContainer.style.visibility = 'visible';
+      joystickContainer.style.pointerEvents = 'auto';
+      joystickContainer.style.position = 'fixed';
+      joystickContainer.style.zIndex = '1000';
+      console.log('Joystick container forced visible');
+    }
+    
+    if (actionButtonsContainer) {
+      actionButtonsContainer.style.display = 'block';
+      actionButtonsContainer.style.opacity = '1';
+      actionButtonsContainer.style.visibility = 'visible';
+      actionButtonsContainer.style.pointerEvents = 'auto';
+      actionButtonsContainer.style.position = 'fixed';
+      actionButtonsContainer.style.zIndex = '1000';
+      console.log('Action buttons container forced visible');
+    }
+    
+    if (joystick) {
+      joystick.style.display = 'block';
+      joystick.style.opacity = '1';
+      joystick.style.visibility = 'visible';
+      joystick.style.pointerEvents = 'auto';
+      console.log('Joystick forced visible');
+    }
+    
+    if (knob) {
+      knob.style.pointerEvents = 'auto';
+      console.log('Joystick knob forced visible');
+    }
+    
+    if (actionButtons) {
+      actionButtons.style.display = 'flex';
+      actionButtons.style.opacity = '1';
+      actionButtons.style.visibility = 'visible';
+      actionButtons.style.pointerEvents = 'auto';
+      console.log('Action buttons forced visible');
+    }
+    
+    // Special handling for Huawei tablets in landscape mode
+    if (isHuawei && isLandscape) {
+      console.log('Huawei tablet in landscape mode detected - applying special fixes');
+      
+      // Force all touch controls to be visible with !important
+      const allTouchElements = document.querySelectorAll('.joystick-container, .action-buttons-container, .virtual-joystick, .action-buttons, .action-button');
+      allTouchElements.forEach(element => {
+        element.style.setProperty('display', 'block', 'important');
+        element.style.setProperty('opacity', '1', 'important');
+        element.style.setProperty('visibility', 'visible', 'important');
+        element.style.setProperty('pointer-events', 'auto', 'important');
+      });
+    }
+  }
+  
   // Action buttons for iPad
   let actionButtons = {
     interact: false,
@@ -169,8 +239,21 @@
           // Also trigger a second resize after a longer delay
           setTimeout(resizeCanvas, 500);
         }, 100);
+        
+        // Force show touch controls after orientation change
+        setTimeout(() => {
+          forceShowTouchControls();
+        }, 200);
       });
     }
+    
+    // General orientation change handler for all devices
+    window.addEventListener('orientationchange', () => {
+      console.log('Orientation change detected');
+      setTimeout(() => {
+        forceShowTouchControls();
+      }, 300);
+    });
     
     // Also listen for container size changes
     if (window.ResizeObserver) {
@@ -1756,6 +1839,9 @@
       console.log('iPad detected, forcing joystick visibility');
     }
     
+    // Force show all touch controls on any tablet/mobile device
+    forceShowTouchControls();
+    
     // Get joystick position and size
     const updateJoystickBounds = () => {
       const rect = joystick.getBoundingClientRect();
@@ -1766,7 +1852,11 @@
     
     // Update bounds initially and on resize
     updateJoystickBounds();
-    window.addEventListener('resize', updateJoystickBounds);
+    window.addEventListener('resize', () => {
+      updateJoystickBounds();
+      // Force show controls after resize
+      setTimeout(forceShowTouchControls, 100);
+    });
     
     // Touch events
     joystick.addEventListener('touchstart', (e) => {
@@ -6247,5 +6337,8 @@
   }
 })();
 
-
+// Force show controls on page load
+setTimeout(() => {
+  forceShowTouchControls();
+}, 500);
 
